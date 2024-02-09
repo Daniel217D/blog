@@ -1,0 +1,19 @@
+{
+    "name": "ddaniel/blog",
+    "type": "site",
+    "autoload": {
+        "psr-4": {
+            "DDaniel\\Blog\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "daniel21703",
+            "email": "daniel217032001@gmail.com"
+        }
+    ],
+    "require": {},
+    "scripts": {
+        "dev_server": "php -S localhost:8000 -t public"
+    }
+}
