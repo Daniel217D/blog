@@ -39,7 +39,12 @@ final class Router {
 		) );
 	}
 
+	public function render_page( string $title, string $content, ...$args ): void {
+		extract( $args );
+		require app()->path . 'templates/wrapper.php';
+	}
+
 	private function init_routes() {
-		require __DIR__ . '/routes.php';
+		require app()->path . 'src/routes.php';
 	}
 }

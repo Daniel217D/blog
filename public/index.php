@@ -4,4 +4,14 @@ use DDaniel\Blog\App;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-new App();
+function app(): App {
+	static $app = null;
+
+	if ( is_null( $app ) ) {
+		$app = new App();
+	}
+
+	return $app;
+}
+
+app()->start();
