@@ -16,8 +16,14 @@
     <title><?php echo $title ?? 'DDaniel blog' ?></title>
 </head>
 <body>
-    <h1><?php echo $title ?></h1>
-    <?php echo $content ?>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1><?php echo $title ?></h1>
+	            <?php echo $content ?>
+            </div>
+        </div>
+    </div>
     <script src="/assets/index.js"></script>
 </body>
 </html>

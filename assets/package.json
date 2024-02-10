@@ -19,6 +19,7 @@
         }
     },
     "dependencies": {
+        "bootstrap": "^5.3.2",
         "markdown-it": "^14.0.0"
     }
 }
