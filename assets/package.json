@@ -1,0 +1,21 @@
+{
+    "name": "ddaniel-blog",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "parcel src/index.js --dist-dir ../public/assets",
+        "build": "parcel build src/index.js --no-source-maps --no-content-hash"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@parcel/transformer-sass": "^2.11.0",
+        "parcel": "^2.11.0"
+    },
+    "targets": {
+        "default": {
+            "distDir": "../public/assets"
+        }
+    }
+}

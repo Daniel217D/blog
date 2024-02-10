@@ -1,3 +1,6 @@
 .idea
 content
 vendor
+assets/node_modules
+assets/.parcel-cache
+public/assets
