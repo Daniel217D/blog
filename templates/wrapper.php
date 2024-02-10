@@ -13,6 +13,14 @@
 
     <link rel="stylesheet" href="/assets/index.css">
 
+    <style>
+        @media (prefers-color-scheme: dark) {
+            body, .list-group-item {
+                background-color: #212529;
+            }
+        }
+    </style>
+
     <title><?php echo $title ?? 'DDaniel blog' ?></title>
 </head>
 <body>
