@@ -12,8 +12,10 @@
             "email": "daniel217032001@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "symfony/routing": "^6.4"
+    },
     "scripts": {
-        "dev_server": "php -S localhost:8000 -t public"
+        "dev": ["Composer\\Config::disableProcessTimeout","php -S localhost:8000 -t public"]
     }
 }

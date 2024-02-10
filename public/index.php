@@ -2,6 +2,6 @@
 
 use DDaniel\Blog\App;
 
-require '../vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 new App();
