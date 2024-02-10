@@ -5,4 +5,4 @@
 
 ?>
 
-<div class="markdown"><?php echo $content ?></div>
+<div class="markdown" style="display: none"><?php echo $content ?></div>
