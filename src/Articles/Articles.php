@@ -13,6 +13,8 @@ class Articles {
 			fn( $path ) => new Article( basename( $path, '.md' ) ),
 			glob( app()->path . 'content/*.md' )
 		);
+
+		usort( $this->articles, fn( Article $a, Article $b ) => $b->get_created_timestamp() - $a->get_created_timestamp() );
 	}
 
 	public function get_content_html(): string {

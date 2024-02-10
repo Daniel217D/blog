@@ -32,9 +32,12 @@ class Article {
 		return '/' . $this->get_slug();
 	}
 
-	public function get_created_time(): string {
+	public function get_created_timestamp(): string {
+		return filemtime( $this->get_file_path() );
+	}
 
-		return date( 'd/m/Y', filemtime( $this->get_file_path() ) );
+	public function get_created_time(): string {
+		return date( 'd/m/Y', $this->get_created_timestamp() );
 	}
 
 	protected function get_content(): bool|string {
