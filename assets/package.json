@@ -17,5 +17,8 @@
         "default": {
             "distDir": "../public/assets"
         }
+    },
+    "dependencies": {
+        "markdown-it": "^14.0.0"
     }
 }

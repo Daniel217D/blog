@@ -16,6 +16,7 @@
     <title><?php echo $title ?? 'DDaniel blog' ?></title>
 </head>
 <body>
+    <h1><?php echo $title ?></h1>
     <?php echo $content ?>
     <script src="/assets/index.js"></script>
 </body>
