@@ -20,12 +20,29 @@ class Article {
 	) {
 	}
 
+	public function get_title(): string {
+		return $this->slug;
+	}
+
+	public function get_slug(): string {
+		return $this->slug;
+	}
+
+	public function get_url(): string {
+		return '/' . $this->get_slug();
+	}
+
+	public function get_created_time(): string {
+
+		return date( 'd/m/Y', filemtime( $this->get_file_path() ) );
+	}
+
 	protected function get_content(): bool|string {
 		return file_get_contents( $this->get_file_path() ) ?: '';
 	}
 
 	public function get_content_html(): bool|string {
-		$content =  file_get_contents( $this->get_file_path() ) ?: '';
+		$content = $this->get_content();
 
 		ob_start();
 		require app()->path . 'templates/article.php';
