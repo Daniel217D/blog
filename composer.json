@@ -16,6 +16,8 @@
         "symfony/routing": "^6.4"
     },
     "scripts": {
+        "build:init": "composer i && cd ./assets && npm i",
+        "build": "cd ./assets && npm run build",
         "dev": ["Composer\\Config::disableProcessTimeout","php -S localhost:8000 -t public"]
     }
 }
