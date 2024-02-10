@@ -1,10 +1,9 @@
 import './styles/index.scss';
 
-import markdownit from 'markdown-it'
+import mdRender from "./mdRender";
+import themes from "./themes";
 
 addEventListener("DOMContentLoaded", (event) => {
-    const md = markdownit()
-    Array.from(document.querySelectorAll('.markdown')).forEach((el) => {
-        el.innerHTML = md.render(el.innerHTML).replaceAll('h1>', 'h2>');
-    })
+    mdRender();
+    themes()
 });
