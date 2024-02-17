@@ -44,6 +44,14 @@ final class Router {
 		require app()->path . 'templates/wrapper.php';
 	}
 
+	public function send_json( mixed $data ):void {
+		header( "Content-type: application/json; charset=utf-8" );
+
+		echo json_encode( $data );
+
+		die();
+	}
+
 	private function init_routes() {
 		require app()->path . 'src/routes.php';
 	}
