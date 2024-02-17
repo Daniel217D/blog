@@ -22,7 +22,7 @@ final class Router {
 		$matcher = new UrlMatcher( $this->routes, $this->context );
 
 		try {
-			$parameters = $matcher->match( $_SERVER['REQUEST_URI'] );
+			$parameters = $matcher->match( parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH ) );
 
 			$parameters['function']( $parameters );
 		} catch ( Exception $e ) {
