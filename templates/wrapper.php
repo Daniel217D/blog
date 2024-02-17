@@ -28,11 +28,10 @@
     <div class="container">
         <div class="row">
             <div class="col">
+	            <?php if( app()->home_url !== $_SERVER['REQUEST_URI'] ) : ?>
+                    <a href="<?php echo app()->home_url ?>" class="d-inline-block mb-2">← Назад</a>
+	            <?php endif; ?>
                 <h1><?php echo $title ?></h1>
-                <?php if( app()->home_url !== $_SERVER['REQUEST_URI'] ) : ?>
-                    <a href="<?php echo app()->home_url ?>">← Назад</a>
-                <?php endif; ?>
-                <hr>
 	            <?php echo $content ?>
             </div>
         </div>
