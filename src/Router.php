@@ -2,7 +2,9 @@
 
 namespace DDaniel\Blog;
 
+use DDaniel\Blog\Articles\ArticleNotFoundException;
 use Exception;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
@@ -25,9 +27,13 @@ final class Router {
 			$parameters = $matcher->match( parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH ) );
 
 			$parameters['function']( $parameters );
+		} catch ( ArticleNotFoundException $e ) {
+			$this->send_404( $e->getMessage() );
+		} catch ( ResourceNotFoundException $e ) {
+			$this->send_404( 'Неизвестный url' );
 		} catch ( Exception $e ) {
-			echo $e->getMessage();
-			exit;
+			error_log( 'Routing error ' . $e->getMessage() );
+			$this->send_404( 'Что-то сломалось' );
 		}
 	}
 
