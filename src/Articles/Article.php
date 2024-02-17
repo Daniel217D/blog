@@ -5,11 +5,14 @@ namespace DDaniel\Blog\Articles;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class Article {
+	/**
+	 * @throws ArticleNotFoundException
+	 */
 	public static function foundOrFail( string $slug ): static {
 		$article = new static( $slug );
 
 		if ( ! $article->exists() ) {
-			throw new ResourceNotFoundException( "Статья $slug не найдена" );
+			throw new ArticleNotFoundException( "Статья $slug не найдена" );
 		}
 
 		return $article;
