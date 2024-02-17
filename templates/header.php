@@ -1,15 +1,13 @@
-<header class="p-3 bg-dark text-white">
+<header class="p-sm-3 pt-3 mb-2 bg-dark text-white border-bottom">
 	<div class="container">
-		<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-			<a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+		<div class="d-flex flex-wrap justify-content-center justify-content-sm-start">
+			<a href="/" class="col-auto d-flex">
                 <img src="/images/logo_white.svg" alt="Логотип белый" class="logo logo-white">
                 <img src="/images/logo_black.svg" alt="Логотип черный" class="logo logo-black">
 			</a>
 
-			<div class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0"></div>
-
-			<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-				<input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
+			<form class="col-12 col-sm-auto my-3 my-sm-0 mx-0 mx-sm-3 d-flex align-items-center">
+				<input type="search" class="form-control form-control-dark " placeholder="Поиск..." aria-label="Search">
 			</form>
 		</div>
 	</div>
