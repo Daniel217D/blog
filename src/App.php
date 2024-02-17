@@ -7,6 +7,8 @@ class App {
 	public readonly string $home_url;
 	public readonly bool $is_home_page;
 
+	public readonly Assets $assets;
+
 	public function __construct() {
 		$this->path = dirname( __DIR__ ) . '/';
 		$this->home_url = '/';
@@ -15,6 +17,8 @@ class App {
 
 		ini_set( 'log_errors', 1 );
 		ini_set( 'error_log', "{$this->path}error.log" );
+
+		$this->assets = new Assets( "{$this->path}public/assets", '/assets' );
 	}
 
 	public function start() {
