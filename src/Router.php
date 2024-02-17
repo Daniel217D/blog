@@ -52,6 +52,19 @@ final class Router {
 		die();
 	}
 
+	public function send_404( string $message = '' ) {
+		http_response_code(404);
+
+		if( str_contains( strtolower( getallheaders()['Accept'] ), 'json' ) ) {
+			$this->send_json( array(
+				'success' => false,
+				'message' => $message
+			) );
+		}
+
+		$this->render_page( '404', $message ?: 'Страница не найдена' );
+	}
+
 	private function init_routes() {
 		require app()->path . 'src/routes.php';
 	}
