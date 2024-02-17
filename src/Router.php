@@ -14,9 +14,12 @@ final class Router {
 	private RouteCollection $routes;
 	private RequestContext $context;
 
+	private bool $response_in_json = false;
+
 	public function __construct() {
 		$this->routes  = new RouteCollection();
 		$this->context = new RequestContext( $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'] );
+
 		$this->init_routes();
 	}
 
@@ -25,6 +28,8 @@ final class Router {
 
 		try {
 			$parameters = $matcher->match( parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH ) );
+
+			$this->response_in_json = str_contains($parameters['_route'], '_api') || str_contains( strtolower( getallheaders()['Accept'] ?? '' ), 'json' );
 
 			$parameters['function']( $parameters );
 		} catch ( ArticleNotFoundException $e ) {
@@ -61,7 +66,7 @@ final class Router {
 	public function send_404( string $message = '' ) {
 		http_response_code(404);
 
-		if( str_contains( strtolower( getallheaders()['Accept'] ), 'json' ) ) {
+		if( $this->response_in_json ) {
 			$this->send_json( array(
 				'success' => false,
 				'message' => $message
