@@ -1,0 +1,19 @@
+.logo {
+  display: none;
+
+  header & {
+    width: 50px;
+  }
+
+  &-white {
+    [data-bs-theme="dark"] & {
+      display: block;
+    }
+  }
+
+  &-black {
+    [data-bs-theme="light"] & {
+      display: block;
+    }
+  }
+}

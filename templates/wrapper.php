@@ -23,6 +23,8 @@
     <title><?php echo $title ?? 'DDaniel blog' ?></title>
 </head>
 <body>
+    <?php include app()->path . 'templates/header.php' ?>
+
     <div class="container">
         <div class="row">
             <div class="col">
