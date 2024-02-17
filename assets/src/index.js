@@ -1,7 +1,7 @@
 import './styles/index.scss';
 
-import mdRender from "./mdRender";
-import themes from "./themes";
+import mdRender from "./js/mdRender";
+import themes from "./js/themes";
 
 addEventListener("DOMContentLoaded", (event) => {
     mdRender();
