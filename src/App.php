@@ -11,6 +11,10 @@ class App {
 		$this->path = dirname( __DIR__ ) . '/';
 		$this->home_url = '/';
 		$this->is_home_page = $this->home_url === parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH );
+
+
+		ini_set( 'log_errors', 1 );
+		ini_set( 'error_log', "{$this->path}error.log" );
 	}
 
 	public function start() {

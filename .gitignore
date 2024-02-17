@@ -4,3 +4,4 @@ vendor
 assets/node_modules
 assets/.parcel-cache
 public/assets
+error.log
