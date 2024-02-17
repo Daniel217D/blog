@@ -25,7 +25,7 @@
 <body>
     <?php include app()->path . 'templates/header.php' ?>
 
-    <div class="container">
+    <div class="container content">
         <div class="row">
             <div class="col">
 	            <?php if( app()->home_url !== $_SERVER['REQUEST_URI'] ) : ?>
