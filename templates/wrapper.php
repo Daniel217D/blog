@@ -36,6 +36,9 @@
             </div>
         </div>
     </div>
+
+    <?php include app()->path . 'templates/footer.php' ?>
+
     <script src="/assets/index.js"></script>
 </body>
 </html>

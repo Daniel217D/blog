@@ -1,9 +1,6 @@
 .logo {
   display: none;
-
-  header & {
-    width: 50px;
-  }
+  width: 50px;
 
   &-white {
     [data-bs-theme="dark"] & {

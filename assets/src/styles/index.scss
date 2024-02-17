@@ -1,2 +1,12 @@
 @import "bootstrap";
 @import "logo";
+
+.nav-tg-logo {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-image: url("../images/tg_logo.svg");
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
