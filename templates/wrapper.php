@@ -20,14 +20,6 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
-    <style>
-        @media (prefers-color-scheme: dark) {
-            body, .list-group-item {
-                background-color: #212529;
-            }
-        }
-    </style>
-
     <title><?php echo $title ?? 'DDaniel blog' ?></title>
 </head>
 <body>
