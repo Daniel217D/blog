@@ -1,4 +1,4 @@
-<footer class="p-sm-3 pt-3 mt-2 bg-dark text-white border-top">
+<footer class="p-sm-3 py-3 mt-2 bg-dark text-white border-top">
     <div class="container">
         <div class="row d-flex flex-column flex-sm-row align-items-center">
             <div class="col-auto d-flex align-items-center my-1">
