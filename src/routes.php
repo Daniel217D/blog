@@ -8,7 +8,7 @@ use DDaniel\Blog\Articles\Articles;
 use DDaniel\Blog\Router;
 
 $this->add_route( 'home', 'GET', '/', function () {
-	$this->render_page( 'Заметки', ( new Articles() )->get_content_html() );
+	$this->render_page( 'Заметки', ( new Articles( $_GET['s'] ?? '' ) )->get_content_html() );
 } );
 
 $this->add_route( 'articles', 'GET', '/{slug}', function ( array $params ) {

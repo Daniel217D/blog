@@ -6,8 +6,8 @@
                 <img src="/images/logo_black.svg" alt="Логотип черный" class="logo logo-black">
 			</a>
 
-			<form class="col-12 col-sm-auto my-3 my-sm-0 d-flex align-items-center">
-				<input type="search" class="form-control form-control-dark " placeholder="Поиск..." aria-label="Search">
+			<form class="col-12 col-sm-auto my-3 my-sm-0 d-flex align-items-center" action="/" method="GET">
+				<input type="search" class="form-control form-control-dark" placeholder="Поиск..." aria-label="Search" name="s" value="<?php echo $_GET['s'] ?? '' ?>">
 			</form>
 		</div>
 	</div>
