@@ -50,8 +50,9 @@ final class Router {
 		) );
 	}
 
-	public function render_page( string $title, string $content, ...$args ): void {
-		extract( $args );
+	public function render_page( PageController $page_controller ): void {
+		$pc = $page_controller;
+
 		require app()->path . 'templates/wrapper.php';
 	}
 
@@ -73,7 +74,11 @@ final class Router {
 			) );
 		}
 
-		$this->render_page( '404', $message ?: 'Страница не найдена' );
+		$this->render_page( new PageController(
+			title: '404',
+			description: $message ?: 'Страница не найдена',
+			content: $message ?: 'Страница не найдена'
+		) );
 	}
 
 	private function init_routes() {
