@@ -38,7 +38,7 @@ use DDaniel\Blog\PageController;
     <title><?php echo $pc->title ?></title>
 </head>
 <body>
-    <?php include app()->path . 'templates/header.php' ?>
+    <?php app()->templates->include('header' ); ?>
 
     <div class="container content">
         <div class="row">
@@ -52,7 +52,7 @@ use DDaniel\Blog\PageController;
         </div>
     </div>
 
-    <?php include app()->path . 'templates/footer.php' ?>
+    <?php app()->templates->include('footer' ); ?>
 
     <?php app()->assets->add_js('index') ?>
 </body>

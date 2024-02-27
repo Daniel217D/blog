@@ -12,6 +12,7 @@ class App {
 	public readonly bool $debug_enabled;
 
 	public readonly Assets $assets;
+	public readonly Templates $templates;
 
 	public function __construct() {
 		$this->path = dirname( __DIR__ ) . '/';
@@ -27,6 +28,7 @@ class App {
 		ini_set( 'error_log', "{$this->path}error.log" );
 
 		$this->assets = new Assets( "{$this->path}public/assets", '/assets' );
+		$this->templates = new Templates( "{$this->path}templates/" );
 	}
 
 	public function start() {

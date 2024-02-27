@@ -48,12 +48,11 @@ class Article {
 	}
 
 	public function get_content_html(): bool|string {
-		$content = $this->get_content();
-
-		ob_start();
-		require app()->path . 'templates/article.php';
-
-		return ob_get_clean();
+		return app()->templates->include(
+			'article',
+			array( 'content' => $this->get_content() ),
+			false
+		);
 	}
 
 	public function get_file_path(): string {

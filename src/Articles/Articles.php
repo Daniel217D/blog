@@ -26,11 +26,10 @@ class Articles {
 	}
 
 	public function get_content_html(): string {
-		$articles = $this->articles;
-
-		ob_start();
-		require app()->path . 'templates/articles.php';
-
-		return ob_get_clean();
+		return app()->templates->include(
+			'articles',
+			array( 'articles' => $this->articles ),
+			false
+		);
 	}
 }

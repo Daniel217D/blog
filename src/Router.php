@@ -44,16 +44,17 @@ final class Router {
 
 	public function add_route( string $name, string|array $methods, string $path, callable $function ) {
 		$this->routes->add( $name, new Route(
-			$path,
-			[ 'function' => $function ],
+			path: $path,
+			defaults: [ 'function' => $function ],
 			methods: is_array( $methods ) ? $methods : [ $methods ]
 		) );
 	}
 
 	public function render_page( PageController $page_controller ): void {
-		$pc = $page_controller;
-
-		require app()->path . 'templates/wrapper.php';
+		app()->templates->include(
+			'wrapper',
+			array( 'pc' => $page_controller )
+		);
 	}
 
 	public function send_json( mixed $data ):void {
