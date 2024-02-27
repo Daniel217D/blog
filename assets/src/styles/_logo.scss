@@ -1,24 +1,24 @@
 .logo {
-  display: none;
+  display: inline-block;
   width: 50px;
 
-  &-white {
-    [data-bs-theme="dark"] & {
-      display: block;
-    }
-
-    .bg-dark {
-      display: block !important;
-    }
-  }
-
-  &-black {
-    [data-bs-theme="light"] & {
-      display: block;
-    }
-
-    .bg-dark {
-      display: none !important;
-    }
-  }
+  //&-white {
+  //  [data-bs-theme="dark"] & {
+  //    display: block;
+  //  }
+  //
+  //  .bg-dark {
+  //    display: block !important;
+  //  }
+  //}
+  //
+  //&-black {
+  //  [data-bs-theme="light"] & {
+  //    display: block;
+  //  }
+  //
+  //  .bg-dark {
+  //    display: none !important;
+  //  }
+  //}
 }
