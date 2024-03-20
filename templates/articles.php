@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @var Article[] $articles
  */
-
-
 
 use DDaniel\Blog\Articles\Article;
 

@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DDaniel\Blog;
 
 class PageController
 {
-    public string $is_home_page;
+    public bool $is_home_page;
 
     public function __construct(
         public string $title = '',

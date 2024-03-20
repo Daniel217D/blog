@@ -1,8 +1,8 @@
 <?php
 
-namespace DDaniel\Blog\Articles;
+declare(strict_types=1);
 
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+namespace DDaniel\Blog\Articles;
 
 class Article
 {
@@ -40,9 +40,9 @@ class Article
         return '/' . $this->getSlug();
     }
 
-    public function getCreatedTimestamp(): string
+    public function getCreatedTimestamp(): int
     {
-        return filemtime($this->getFilePath());
+        return filemtime($this->getFilePath()) ?: 0;
     }
 
     public function getCreatedTime(): string

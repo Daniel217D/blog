@@ -1,9 +1,6 @@
 <?php
-
-use DDaniel\Blog\App;
+declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
-
-
 
 app()->start();

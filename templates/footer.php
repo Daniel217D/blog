@@ -1,3 +1,8 @@
+<?php
+
+declare(strict_types=1);
+
+?>
 <footer class="p-sm-3 py-3 mt-2 bg-dark text-white border-top">
     <div class="container">
         <div class="row d-flex flex-column flex-sm-row align-items-center">

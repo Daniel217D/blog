@@ -1,6 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DDaniel\Blog;
+
+use Symfony\Component\ErrorHandler\Debug;
 
 class App
 {
@@ -24,7 +28,7 @@ class App
         $env = @parse_ini_file("$this->path/.env") ?: array();
         $this->site_name = $env['APP_NAME'];
         $this->site_url = $env['APP_URL'];
-        $this->debug_enabled = $env['APP_DEBUG'];
+        $this->debug_enabled = 'true' === $env['APP_DEBUG'];
 
         ini_set('log_errors', 1);
         ini_set('error_log', "{$this->path}error.log");

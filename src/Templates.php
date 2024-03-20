@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace DDaniel\Blog;
 
 class Templates
@@ -40,14 +42,12 @@ class Templates
             $template .= '.php';
         }
 
-        $template_path = $this->templates_path . $template;
-
-        if (file_exists($template_path)) {
+        if ($this->exists($template)) {
             ob_start();
 
             extract($args);
 
-            include $template_path;
+            include $this->templates_path . $template;
 
             $template_body = ob_get_clean();
         } elseif (defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY) {
