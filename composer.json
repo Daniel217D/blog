@@ -26,6 +26,7 @@
         "phpcs:fix": "php ./vendor/bin/phpcbf ./src ./templates --standard=PSR12 --cache -p -s --colors --exclude=Generic.Files.LineLength"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "^3.9"
+        "squizlabs/php_codesniffer": "^3.9",
+        "vimeo/psalm": "^5.23"
     }
 }
