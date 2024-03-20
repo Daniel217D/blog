@@ -22,10 +22,10 @@ final class Router
         $this->routes  = new RouteCollection();
         $this->context = new RequestContext($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
-        $this->init_routes();
+        $this->initRoutes();
     }
 
-    public function process_request()
+    public function processRequest()
     {
         $matcher = new UrlMatcher($this->routes, $this->context);
 
@@ -36,16 +36,16 @@ final class Router
 
             $parameters['function']($parameters);
         } catch (ArticleNotFoundException $e) {
-            $this->send_404($e->getMessage());
+            $this->send404($e->getMessage());
         } catch (ResourceNotFoundException $e) {
-            $this->send_404('Неизвестный url');
+            $this->send404('Неизвестный url');
         } catch (Exception $e) {
             error_log('Routing error ' . $e->getMessage());
-            $this->send_404('Что-то сломалось');
+            $this->send404('Что-то сломалось');
         }
     }
 
-    public function add_route(string $name, string|array $methods, string $path, callable $function)
+    public function addRoute(string $name, string|array $methods, string $path, callable $function)
     {
         $this->routes->add($name, new Route(
             path: $path,
@@ -54,7 +54,7 @@ final class Router
         ));
     }
 
-    public function render_page(PageController $page_controller): void
+    public function renderPage(PageController $page_controller): void
     {
         app()->templates->include(
             'wrapper',
@@ -62,7 +62,7 @@ final class Router
         );
     }
 
-    public function send_json(mixed $data): void
+    public function sendJson(mixed $data): void
     {
         header("Content-type: application/json; charset=utf-8");
 
@@ -71,25 +71,25 @@ final class Router
         die();
     }
 
-    public function send_404(string $message = '')
+    public function send404(string $message = '')
     {
         http_response_code(404);
 
         if ($this->response_in_json) {
-            $this->send_json(array(
+            $this->sendJson(array(
                 'success' => false,
                 'message' => $message
             ));
         }
 
-        $this->render_page(new PageController(
+        $this->renderPage(new PageController(
             title: '404',
             description: $message ?: 'Страница не найдена',
             content: $message ?: 'Страница не найдена'
         ));
     }
 
-    private function init_routes()
+    private function initRoutes()
     {
         require app()->path . 'src/routes.php';
     }

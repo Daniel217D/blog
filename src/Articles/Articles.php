@@ -24,10 +24,10 @@ class Articles
         );
 
 
-        usort($this->articles, fn(Article $a, Article $b) => $b->get_created_timestamp() - $a->get_created_timestamp());
+        usort($this->articles, fn(Article $a, Article $b) => $b->getCreatedTimestamp() - $a->getCreatedTimestamp());
     }
 
-    public function get_content_html(): string
+    public function getContentHtml(): string
     {
         return app()->templates->include(
             'articles',

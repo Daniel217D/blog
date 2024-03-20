@@ -35,6 +35,6 @@ class App
 
     public function start()
     {
-        ( new Router() )->process_request();
+        ( new Router() )->processRequest();
     }
 }

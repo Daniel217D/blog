@@ -29,7 +29,7 @@ use DDaniel\Blog\PageController;
     <meta property="og:image:width" content="1024">
     <meta property="og:image:height" content="512">
 
-    <?php app()->assets->add_css('index') ?>
+    <?php app()->assets->addCss('index') ?>
 
     <link rel="apple-touch-icon" sizes="120x120" href="<?php echo app()->site_url . '/favicons/apple-touch-icon.png' ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo app()->site_url . '/favicons/favicon-32x32.png' ?>">
@@ -67,6 +67,6 @@ use DDaniel\Blog\PageController;
         }
     </script>
 
-    <?php app()->assets->add_js('index') ?>
+    <?php app()->assets->addJs('index') ?>
 </body>
 </html>

@@ -10,7 +10,7 @@ class Assets
     ) {
     }
 
-    public function add_css(string $file_name): void
+    public function addCss(string $file_name): void
     {
         $ver = filemtime("$this->assets_path/$file_name.css");
 
@@ -23,7 +23,7 @@ class Assets
 HTML;
     }
 
-    public function add_js(string $file_name): void
+    public function addJs(string $file_name): void
     {
         $ver = filemtime("$this->assets_path/$file_name.js");
 

@@ -25,52 +25,52 @@ class Article
     ) {
     }
 
-    public function get_title(): string
+    public function getTitle(): string
     {
         return $this->slug;
     }
 
-    public function get_slug(): string
+    public function getSlug(): string
     {
         return $this->slug;
     }
 
-    public function get_url(): string
+    public function getUrl(): string
     {
-        return '/' . $this->get_slug();
+        return '/' . $this->getSlug();
     }
 
-    public function get_created_timestamp(): string
+    public function getCreatedTimestamp(): string
     {
-        return filemtime($this->get_file_path());
+        return filemtime($this->getFilePath());
     }
 
-    public function get_created_time(): string
+    public function getCreatedTime(): string
     {
-        return date('d/m/Y', $this->get_created_timestamp());
+        return date('d/m/Y', $this->getCreatedTimestamp());
     }
 
-    protected function get_content(): bool|string
+    protected function getContent(): bool|string
     {
-        return file_get_contents($this->get_file_path()) ?: '';
+        return file_get_contents($this->getFilePath()) ?: '';
     }
 
-    public function get_content_html(): bool|string
+    public function getContentHtml(): bool|string
     {
         return app()->templates->include(
             'article',
-            array( 'content' => $this->get_content() ),
+            array( 'content' => $this->getContent() ),
             false
         );
     }
 
-    public function get_file_path(): string
+    public function getFilePath(): string
     {
         return app()->path . "content/$this->slug.md";
     }
 
     public function exists(): bool
     {
-        return file_exists($this->get_file_path());
+        return file_exists($this->getFilePath());
     }
 }
