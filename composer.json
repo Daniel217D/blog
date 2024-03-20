@@ -4,7 +4,10 @@
     "autoload": {
         "psr-4": {
             "DDaniel\\Blog\\": "src/"
-        }
+        },
+        "files": [
+          "src/appFunction.php"
+        ]
     },
     "authors": [
         {
