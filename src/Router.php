@@ -10,79 +10,87 @@ use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 
-final class Router {
-	private RouteCollection $routes;
-	private RequestContext $context;
+final class Router
+{
+    private RouteCollection $routes;
+    private RequestContext $context;
 
-	private bool $response_in_json = false;
+    private bool $response_in_json = false;
 
-	public function __construct() {
-		$this->routes  = new RouteCollection();
-		$this->context = new RequestContext( $_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD'] );
+    public function __construct()
+    {
+        $this->routes  = new RouteCollection();
+        $this->context = new RequestContext($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
 
-		$this->init_routes();
-	}
+        $this->init_routes();
+    }
 
-	public function process_request() {
-		$matcher = new UrlMatcher( $this->routes, $this->context );
+    public function process_request()
+    {
+        $matcher = new UrlMatcher($this->routes, $this->context);
 
-		try {
-			$parameters = $matcher->match( parse_url( $_SERVER["REQUEST_URI"], PHP_URL_PATH ) );
+        try {
+            $parameters = $matcher->match(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH));
 
-			$this->response_in_json = str_contains($parameters['_route'], '_api') || str_contains( strtolower( getallheaders()['Accept'] ?? '' ), 'json' );
+            $this->response_in_json = str_contains($parameters['_route'], '_api') || str_contains(strtolower(getallheaders()['Accept'] ?? ''), 'json');
 
-			$parameters['function']( $parameters );
-		} catch ( ArticleNotFoundException $e ) {
-			$this->send_404( $e->getMessage() );
-		} catch ( ResourceNotFoundException $e ) {
-			$this->send_404( 'Неизвестный url' );
-		} catch ( Exception $e ) {
-			error_log( 'Routing error ' . $e->getMessage() );
-			$this->send_404( 'Что-то сломалось' );
-		}
-	}
+            $parameters['function']($parameters);
+        } catch (ArticleNotFoundException $e) {
+            $this->send_404($e->getMessage());
+        } catch (ResourceNotFoundException $e) {
+            $this->send_404('Неизвестный url');
+        } catch (Exception $e) {
+            error_log('Routing error ' . $e->getMessage());
+            $this->send_404('Что-то сломалось');
+        }
+    }
 
-	public function add_route( string $name, string|array $methods, string $path, callable $function ) {
-		$this->routes->add( $name, new Route(
-			path: $path,
-			defaults: [ 'function' => $function ],
-			methods: is_array( $methods ) ? $methods : [ $methods ]
-		) );
-	}
+    public function add_route(string $name, string|array $methods, string $path, callable $function)
+    {
+        $this->routes->add($name, new Route(
+            path: $path,
+            defaults: [ 'function' => $function ],
+            methods: is_array($methods) ? $methods : [ $methods ]
+        ));
+    }
 
-	public function render_page( PageController $page_controller ): void {
-		app()->templates->include(
-			'wrapper',
-			array( 'pc' => $page_controller )
-		);
-	}
+    public function render_page(PageController $page_controller): void
+    {
+        app()->templates->include(
+            'wrapper',
+            array( 'pc' => $page_controller )
+        );
+    }
 
-	public function send_json( mixed $data ):void {
-		header( "Content-type: application/json; charset=utf-8" );
+    public function send_json(mixed $data): void
+    {
+        header("Content-type: application/json; charset=utf-8");
 
-		echo json_encode( $data );
+        echo json_encode($data);
 
-		die();
-	}
+        die();
+    }
 
-	public function send_404( string $message = '' ) {
-		http_response_code(404);
+    public function send_404(string $message = '')
+    {
+        http_response_code(404);
 
-		if( $this->response_in_json ) {
-			$this->send_json( array(
-				'success' => false,
-				'message' => $message
-			) );
-		}
+        if ($this->response_in_json) {
+            $this->send_json(array(
+                'success' => false,
+                'message' => $message
+            ));
+        }
 
-		$this->render_page( new PageController(
-			title: '404',
-			description: $message ?: 'Страница не найдена',
-			content: $message ?: 'Страница не найдена'
-		) );
-	}
+        $this->render_page(new PageController(
+            title: '404',
+            description: $message ?: 'Страница не найдена',
+            content: $message ?: 'Страница не найдена'
+        ));
+    }
 
-	private function init_routes() {
-		require app()->path . 'src/routes.php';
-	}
+    private function init_routes()
+    {
+        require app()->path . 'src/routes.php';
+    }
 }

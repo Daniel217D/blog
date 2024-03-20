@@ -1,7 +1,10 @@
 <?php
+
 /**
  * @var PageController $pc
  */
+
+
 
 use DDaniel\Blog\PageController;
 
@@ -38,21 +41,23 @@ use DDaniel\Blog\PageController;
     <title><?php echo $pc->title ?></title>
 </head>
 <body>
-    <?php app()->templates->include('header' ); ?>
+    <?php app()->templates->include('header'); ?>
 
     <div class="container content">
         <div class="row">
             <div class="col">
-	            <?php if( ! $pc->is_home_page ) : ?>
+                <?php if (! $pc->is_home_page) :
+                    ?>
                     <a href="<?php echo app()->home_url ?>" class="d-inline-block mb-2">← Назад</a>
-	            <?php endif; ?>
+                    <?php
+                endif; ?>
                 <h1><?php echo $pc->title ?></h1>
-	            <?php echo $pc->content ?>
+                <?php echo $pc->content ?>
             </div>
         </div>
     </div>
 
-    <?php app()->templates->include('footer' ); ?>
+    <?php app()->templates->include('footer'); ?>
 
     <script>
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {

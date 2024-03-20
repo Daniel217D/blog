@@ -2,35 +2,37 @@
 
 namespace DDaniel\Blog;
 
-class Assets {
+class Assets
+{
+    public function __construct(
+        public readonly string $assets_path,
+        public readonly string $assets_url
+    ) {
+    }
 
-	public function __construct(
-		public readonly string $assets_path,
-		public readonly string $assets_url
-	) {
-	}
+    public function add_css(string $file_name): void
+    {
+        $ver = filemtime("$this->assets_path/$file_name.css");
 
-	public function add_css( string $file_name ): void {
-		$ver = filemtime( "$this->assets_path/$file_name.css" );
+        if (! $ver) {
+            return;
+        }
 
-		if ( ! $ver ) {
-			return;
-		}
-
-		echo <<<HTML
+        echo <<<HTML
 <link rel="stylesheet" href="{$this->assets_url}/$file_name.css?ver=$ver">
 HTML;
-	}
+    }
 
-	public function add_js( string $file_name ): void {
-		$ver = filemtime( "$this->assets_path/$file_name.js" );
+    public function add_js(string $file_name): void
+    {
+        $ver = filemtime("$this->assets_path/$file_name.js");
 
-		if ( ! $ver ) {
-			return;
-		}
+        if (! $ver) {
+            return;
+        }
 
-		echo <<<HTML
+        echo <<<HTML
 <script src="{$this->assets_url}/$file_name.js?ver=$ver"></script>
 HTML;
-	}
+    }
 }
