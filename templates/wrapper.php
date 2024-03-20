@@ -54,6 +54,14 @@ use DDaniel\Blog\PageController;
 
     <?php app()->templates->include('footer' ); ?>
 
+    <script>
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.body.setAttribute('data-bs-theme', 'dark');
+        } else {
+            document.body.setAttribute('data-bs-theme', 'light');
+        }
+    </script>
+
     <?php app()->assets->add_js('index') ?>
 </body>
 </html>
