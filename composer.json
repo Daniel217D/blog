@@ -21,9 +21,9 @@
         "build:init": "composer i && cd ./assets && npm i",
         "build": "cd ./assets && npm run build",
         "dev": ["Composer\\Config::disableProcessTimeout","php -S localhost:8000 -t public"],
-        "phpcs": "php ./vendor/bin/phpcs ./src ./templates --standard=PSR12 --cache -p -s --colors --report=summary",
-        "phpcs:full": "php ./vendor/bin/phpcs ./src ./templates --standard=PSR12 --cache -p -s --colors",
-        "phpcs:fix": "php ./vendor/bin/phpcbf ./src ./templates --standard=PSR12 --cache -p -s --colors"
+        "phpcs": "php ./vendor/bin/phpcs ./src ./templates --standard=PSR12 --cache -p -s --colors --report=summary --exclude=Generic.Files.LineLength",
+        "phpcs:full": "php ./vendor/bin/phpcs ./src ./templates --standard=PSR12 --cache -p -s --colors --exclude=Generic.Files.LineLength",
+        "phpcs:fix": "php ./vendor/bin/phpcbf ./src ./templates --standard=PSR12 --cache -p -s --colors --exclude=Generic.Files.LineLength"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "^3.9"
