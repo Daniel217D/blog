@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace DDaniel\Blog\Articles;
 
-class Article
+final class Article
 {
     /**
      * @throws ArticleNotFoundException
      */
-    public static function foundOrFail(string $slug): static
+    public static function foundOrFail(string $slug): Article
     {
-        $article = new static($slug);
+        $article = new Article($slug);
 
         if (! $article->exists()) {
             throw new ArticleNotFoundException("Статья $slug не найдена");
@@ -42,7 +42,7 @@ class Article
 
     public function getCreatedTimestamp(): int
     {
-        return filemtime($this->getFilePath()) ?: 0;
+        return (int) filemtime($this->getFilePath());
     }
 
     public function getCreatedTime(): string
@@ -50,12 +50,12 @@ class Article
         return date('d/m/Y', $this->getCreatedTimestamp());
     }
 
-    protected function getContent(): bool|string
+    protected function getContent(): string
     {
-        return file_get_contents($this->getFilePath()) ?: '';
+        return (string) file_get_contents($this->getFilePath());
     }
 
-    public function getContentHtml(): bool|string
+    public function getContentHtml(): string
     {
         return app()->templates->include(
             'article',

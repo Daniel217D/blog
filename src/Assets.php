@@ -16,7 +16,7 @@ class Assets
     {
         $ver = filemtime("$this->assets_path/$file_name.css");
 
-        if (! $ver) {
+        if ($ver === false) {
             return;
         }
 
@@ -29,7 +29,7 @@ HTML;
     {
         $ver = filemtime("$this->assets_path/$file_name.js");
 
-        if (! $ver) {
+        if ($ver === false) {
             return;
         }
 

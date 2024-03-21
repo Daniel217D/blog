@@ -24,17 +24,17 @@ final class Router
     public function __construct()
     {
         $this->routes  = new RouteCollection();
-        $this->context = new RequestContext($_SERVER['REQUEST_URI'], $_SERVER['REQUEST_METHOD']);
+        $this->context = new RequestContext($_SERVER['REQUEST_URI'] ?? '', $_SERVER['REQUEST_METHOD'] ?? '');
 
         $this->initRoutes();
     }
 
-    public function processRequest()
+    public function processRequest(): void
     {
         $matcher = new UrlMatcher($this->routes, $this->context);
 
         try {
-            $parameters = $matcher->match(parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH));
+            $parameters = $matcher->match(parse_url($_SERVER["REQUEST_URI"] ?? '', PHP_URL_PATH));
 
             $this->response_in_json = str_contains($parameters['_route'], '_api') || str_contains(strtolower(getallheaders()['Accept'] ?? ''), 'json');
 
@@ -49,7 +49,7 @@ final class Router
         }
     }
 
-    public function addRoute(string $name, string|array $methods, string $path, callable $function)
+    public function addRoute(string $name, string|array $methods, string $path, callable $function): void
     {
         $this->routes->add($name, new Route(
             path: $path,
@@ -75,7 +75,7 @@ final class Router
         die();
     }
 
-    public function send404(string $message = '')
+    public function send404(string $message = ''): void
     {
         http_response_code(404);
 
@@ -93,13 +93,13 @@ final class Router
         ));
     }
 
-    private function initRoutes()
+    private function initRoutes(): void
     {
         $this->addRoute('home', 'GET', '/', function () {
             $this->renderPage(new PageController(
                 title: 'Блог Даниила Дубченко',
                 description: 'Блог Даниила Дубченко о web-разработке. Бекенд на Node.js и PHP. Фронт на чем угодно только не jQuery',
-                content: ( new Articles($_GET['s'] ?? '') )->getContentHtml()
+                content: ( new Articles(app()->search_string) )->getContentHtml()
             ));
         });
         $this->addRoute('article', 'GET', '/{slug}', function (array $params) {

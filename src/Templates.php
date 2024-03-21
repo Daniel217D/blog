@@ -34,9 +34,9 @@ class Templates
      * @param  array  $args     Arguments.
      * @param  bool  $echo     Return or echo. Echo by default.
      *
-     * @return bool|string
+     * @return string
      */
-    public function include(string $template, array $args = array(), bool $echo = true)
+    public function include(string $template, array $args = array(), bool $echo = true): string
     {
         if (! str_ends_with($template, '.php')) {
             $template .= '.php';
@@ -46,7 +46,9 @@ class Templates
             ob_start();
 
             extract($args);
-
+            /**
+             * @psalm-suppress UnresolvableInclude
+             */
             include $this->templates_path . $template;
 
             $template_body = ob_get_clean();

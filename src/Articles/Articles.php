@@ -15,13 +15,13 @@ class Articles
     {
         $file_paths = glob(app()->path . 'content/*.md');
 
-        if (! empty($name_filter)) {
+        if ($name_filter !== '') {
             $name_filter = strtolower($name_filter);
-            $file_paths = array_filter($file_paths, fn($path) => str_contains(strtolower(basename($path, '.md')), $name_filter));
+            $file_paths = array_filter($file_paths, static fn(string $path) => str_contains(strtolower(basename($path, '.md')), $name_filter));
         }
 
         $this->articles = array_map(
-            fn($path) => new Article(basename($path, '.md')),
+            static fn(string $path) => new Article(basename($path, '.md')),
             $file_paths
         );
 
