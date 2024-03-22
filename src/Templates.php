@@ -43,16 +43,19 @@ class Templates
         }
 
         if ($this->exists($template)) {
-            ob_start();
+            $template_body = (function() use ($template, $args) {
+                ob_start();
 
-            extract($args);
-            /**
-             * @psalm-suppress UnresolvableInclude
-             */
-            include $this->templates_path . $template;
+                extract($args);
+                /**
+                 * @psalm-suppress UnresolvableInclude
+                 */
+                include $this->templates_path . $template;
 
-            $template_body = ob_get_clean();
-        } elseif (defined('WP_DEBUG_DISPLAY') && WP_DEBUG_DISPLAY) {
+                return ob_get_clean();
+            })();
+
+        } elseif (app()->debug_enabled) {
             $template_body = "Template '$template' not found";
         } else {
             $template_body = '';
