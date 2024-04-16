@@ -97,7 +97,7 @@ final class Router
     {
         $this->addRoute('home', 'GET', '/', function () {
             $this->renderPage(new PageController(
-                title: 'Web блог о Web разработке Даниила Дубченко',
+                title: 'Блог о Web разработке Даниила Дубченко',
                 description: 'Блог Даниила Дубченко о web-разработке',
                 content: ( new Articles(app()->search_string) )->getContentHtml()
             ));
