@@ -4,6 +4,7 @@ FROM php:8.3-fpm-alpine3.17
 RUN set -eux && \
     apk update && \
     apk add --no-cache patch && \
+    apk add --no-cache nodejs npm && \
     apk del && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /root/history
