@@ -6,3 +6,4 @@ assets/.parcel-cache
 public/assets
 .env
 error.log
+docker-compose.override.yaml
