@@ -55,15 +55,28 @@ use DDaniel\Blog\PageController;
                 <?php echo $pc->content ?>
             </div>
         </div>
+	    <?php app()->templates->include('controlButtons', ['pc' => $pc]); ?>
     </div>
 
     <?php app()->templates->include('footer'); ?>
 
     <script>
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.body.setAttribute('data-bs-theme', 'dark');
-        } else {
-            document.body.setAttribute('data-bs-theme', 'light');
+        window.setSiteTheme = function ( newTheme = null ) {
+            if( newTheme ) {
+                localStorage.setItem('theme', newTheme);
+            }
+
+            if( localStorage.getItem('theme') ) {
+                document.body.setAttribute('data-bs-theme', localStorage.getItem('theme'));
+            } else {
+                if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    document.body.setAttribute('data-bs-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    document.body.setAttribute('data-bs-theme', 'light');
+                    localStorage.setItem('theme', 'light');
+                }
+            }
         }
     </script>
 
