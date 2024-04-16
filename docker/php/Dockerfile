@@ -11,7 +11,7 @@ RUN set -eux && \
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && \
-    install-php-extensions @composer opcache intl pcov pcntl && \
+    install-php-extensions @composer && \
     ln -s composer /usr/local/bin/c
 
 COPY --link php.ini $PHP_INI_DIR/conf.d/
