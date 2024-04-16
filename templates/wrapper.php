@@ -78,6 +78,8 @@ use DDaniel\Blog\PageController;
                 }
             }
         }
+
+        setSiteTheme()
     </script>
 
     <?php app()->assets->addJs('index') ?>
