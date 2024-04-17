@@ -4,6 +4,7 @@ services:
   php:
     build:
       context: docker/php
+    restart: always
     environment:
       HISTFILE: /root/history/.history
       ENV: /root/.bashrc
@@ -14,6 +15,7 @@ services:
 
   nginx:
     image: nginx:1.24-alpine3.17
+    restart: always
     depends_on:
       - php
     volumes:
