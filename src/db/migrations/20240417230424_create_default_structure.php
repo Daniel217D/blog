@@ -35,8 +35,8 @@ final class CreateDefaultStructure extends AbstractMigration
                    ->addColumn('status', 'string', ['limit' => 15])
                    ->addColumn('author_id', 'integer')
                    ->addForeignKey('author_id', 'authors', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
-                   ->addColumn('created', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
-                   ->addColumn('updated', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
+                   ->addColumn('created_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
+                   ->addColumn('updated_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
                    ->create();
 
         $tableCategories = $this->table('categories');
