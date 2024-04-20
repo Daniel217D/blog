@@ -54,7 +54,7 @@ final class App
     {
         $config = ORMSetup::createAttributeMetadataConfiguration(
             paths: array("{$this->path}src/Models"),
-            isDevMode: true,
+            isDevMode: $env['APP_ENV'] !== 'production',
         );
 
         $connection = DriverManager::getConnection([
