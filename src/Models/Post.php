@@ -29,8 +29,9 @@ class Post
     #[ORM\Column(type: 'string', length: 15)]
     private string $status;
 
-    #[ORM\Column(name: 'author_id', type: 'integer')]
-    private int $authorId;
+    #[ORM\ManyToOne(targetEntity: Author::class)]
+    #[ORM\JoinColumn(name: 'author_id')]
+    private Author $author;
 
     #[ORM\Column(name: 'created_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdTime;
@@ -98,14 +99,14 @@ class Post
         $this->status = $status;
     }
 
-    public function getAuthorId(): int
+    public function getAuthor(): Author
     {
-        return $this->authorId;
+        return $this->author;
     }
 
-    public function setAuthorId(int $authorId): void
+    public function setAuthor(Author $author): void
     {
-        $this->authorId = $authorId;
+        $this->author = $author;
     }
 
     public function getCreatedTime(): DateTimeImmutable
