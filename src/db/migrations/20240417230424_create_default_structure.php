@@ -20,51 +20,50 @@ final class CreateDefaultStructure extends AbstractMigration
     public function change(): void
     {
         $tableUsers = $this->table('authors');
-        $tableUsers->addColumn('login', 'string', ['limit' => 15])
-                   ->addColumn('password', 'string', ['limit' => 255])
-                   ->addColumn('name', 'string', ['limit' => 31])
-                   ->addColumn('email', 'string', ['limit' => 127])
-                   ->addColumn('role', 'string', ['limit' => 15])
+        $tableUsers->addColumn('login', 'string', ['limit' => 15, 'null' => false])
+                   ->addColumn('password', 'string', ['limit' => 255, 'null' => false])
+                   ->addColumn('name', 'string', ['limit' => 31, 'null' => false])
+                   ->addColumn('email', 'string', ['limit' => 127, 'null' => false])
+                   ->addColumn('role', 'string', ['limit' => 15, 'null' => false])
                    ->create();
 
         $tablePosts = $this->table('posts');
-        $tablePosts->addColumn('title', 'string', ['limit' => 127])
-                   ->addColumn('slug', 'string', ['limit' => 127])
-                   ->addColumn('content', 'text')
-                   ->addColumn('excerpt', 'text')
-                   ->addColumn('status', 'string', ['limit' => 15])
-                   ->addColumn('author_id', 'integer')
-                   ->addForeignKey('author_id', 'authors', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
-                   ->addColumn('created_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
-                   ->addColumn('updated_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP'])
+        $tablePosts->addColumn('title', 'string', ['limit' => 127, 'null' => false])
+                   ->addColumn('slug', 'string', ['limit' => 127, 'null' => false])
+                   ->addColumn('content', 'text', ['null' => false])
+                   ->addColumn('excerpt', 'text', ['null' => true])
+                   ->addColumn('status', 'string', ['limit' => 15, 'null' => false])
+                   ->addColumn('author_id', 'integer', ['null' => false])
+                   ->addForeignKey('author_id', 'authors', 'id', ['delete' => 'NO_ACTION', 'update' => 'NO_ACTION'])
+                   ->addColumn('created_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => false])
+                   ->addColumn('updated_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => false])
                    ->create();
 
         $tableCategories = $this->table('categories');
-        $tableCategories->addColumn('title', 'string', ['limit' => 127])
-                        ->addColumn('slug', 'string', ['limit' => 127])
-                        ->addColumn('description', 'text')
-                        ->addColumn('parent_category_id', 'integer')
-                        ->addForeignKey('parent_category_id', 'categories', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
+        $tableCategories->addColumn('title', 'string', ['limit' => 127, 'null' => false])
+                        ->addColumn('slug', 'string', ['limit' => 127, 'null' => false])
+                        ->addColumn('description', 'text', ['null' => true])
+                        ->addColumn('parent_category_id', 'integer', ['null' => true])
                         ->create();
 
-        $tablePostCategory = $this->table('post_category');
-        $tablePostCategory->addColumn('post_id', 'integer')
-                          ->addForeignKey('post_id', 'posts', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
-                          ->addColumn('category_id', 'integer')
-                          ->addForeignKey('category_id', 'categories', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
+        $tablePostCategory = $this->table('post_category', ['id' => false, 'primary_key' => ['post_id', 'category_id']]);
+        $tablePostCategory->addColumn('post_id', 'integer', ['null' => false])
+                          ->addForeignKey('post_id', 'posts', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
+                          ->addColumn('category_id', 'integer', ['null' => false])
+                          ->addForeignKey('category_id', 'categories', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
                           ->create();
 
         $tableTags = $this->table('tags');
-        $tableTags->addColumn('title', 'string', ['limit' => 127])
-                      ->addColumn('slug', 'string', ['limit' => 127])
-                      ->addColumn('description', 'text')
-                      ->create();
+        $tableTags->addColumn('title', 'string', ['limit' => 127, 'null' => false])
+                  ->addColumn('slug', 'string', ['limit' => 127, 'null' => false])
+                  ->addColumn('description', 'text')
+                  ->create();
 
-        $tablePostTag = $this->table('post_tag');
-        $tablePostTag->addColumn('post_id', 'integer')
-                          ->addForeignKey('post_id', 'posts', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
-                          ->addColumn('tag_id', 'integer')
-                          ->addForeignKey('tag_id', 'tags', 'id', ['delete' => 'SET_NULL', 'update' => 'NO_ACTION'])
-                          ->create();
+        $tablePostTag = $this->table('post_tag', ['id' => false, 'primary_key' => ['post_id', 'tag_id']]);
+        $tablePostTag->addColumn('post_id', 'integer', ['null' => false])
+                     ->addForeignKey('post_id', 'posts', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
+                     ->addColumn('tag_id', 'integer', ['null' => false])
+                     ->addForeignKey('tag_id', 'tags', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
+                     ->create();
     }
 }

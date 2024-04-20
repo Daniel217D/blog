@@ -3,6 +3,8 @@
 namespace DDaniel\Blog\Models;
 
 use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -20,24 +22,45 @@ class Post
     #[ORM\Column(type: 'string', length: 127)]
     private string $slug;
 
-    #[ORM\Column(type: 'string')]
+    #[ORM\Column(type: 'text')]
     private string $content;
 
-    #[ORM\Column(type: 'string')]
-    private string $excerpt;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $excerpt;
 
     #[ORM\Column(type: 'string', length: 15)]
     private string $status;
 
-    #[ORM\ManyToOne(targetEntity: Author::class)]
-    #[ORM\JoinColumn(name: 'author_id')]
-    private Author $author;
+    #[ORM\Column(name: 'author_id', type: 'integer')]
+    private int $authorId;
 
     #[ORM\Column(name: 'created_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdTime;
 
     #[ORM\Column(name: 'updated_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $updatedTime;
+
+    #[ORM\ManyToOne(targetEntity: Author::class)]
+    #[ORM\JoinColumn(name: 'author_id')]
+    private ?Author $author = null;
+
+    /**
+     * @var Collection<int, Category>
+     */
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'posts')]
+    private Collection $categories;
+
+    /**
+     * @var Collection<int, Tag>
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+    }
 
     public function getId(): int
     {
@@ -99,14 +122,14 @@ class Post
         $this->status = $status;
     }
 
-    public function getAuthor(): Author
+    public function getAuthorId(): int
     {
-        return $this->author;
+        return $this->authorId;
     }
 
-    public function setAuthor(Author $author): void
+    public function setAuthorId(int $authorId): void
     {
-        $this->author = $author;
+        $this->authorId = $authorId;
     }
 
     public function getCreatedTime(): DateTimeImmutable
@@ -127,5 +150,25 @@ class Post
     public function setUpdatedTime(DateTimeImmutable $updatedTime): void
     {
         $this->updatedTime = $updatedTime;
+    }
+
+    public function getAuthor(): Author
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(Author $author): void
+    {
+        $this->author = $author;
+    }
+
+    public function getCategories(): ArrayCollection|Collection
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(ArrayCollection|Collection $categories): void
+    {
+        $this->categories = $categories;
     }
 }
