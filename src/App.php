@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace DDaniel\Blog;
 
-class App
+use Doctrine\DBAL\DriverManager;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMSetup;
+
+final class App
 {
     public readonly string $path;
     public readonly string $home_url;
@@ -17,6 +21,8 @@ class App
 
     public readonly Assets $assets;
     public readonly Templates $templates;
+
+    public readonly EntityManager $entity_manager;
 
     public function __construct()
     {
@@ -40,6 +46,27 @@ class App
 
         $this->assets = new Assets("{$this->path}public/assets", '/assets');
         $this->templates = new Templates("{$this->path}templates/");
+
+        $this->initOrm($env);
+    }
+
+    private function initOrm(array $env): void
+    {
+        $config = ORMSetup::createAttributeMetadataConfiguration(
+            paths: array("{$this->path}src/Models"),
+            isDevMode: true,
+        );
+
+        $connection = DriverManager::getConnection([
+            'driver' => 'pdo_pgsql',
+            'host' => $env['DB_HOST'],
+            'port' => null,
+            'dbname' => $env['DB_NAME'],
+            'user' => $env['DB_USER'],
+            'password' => $env['DB_PASSWORD'],
+        ], $config);
+
+        $this->entity_manager = new EntityManager($connection, $config);
     }
 
     public function start(): void
