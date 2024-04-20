@@ -38,145 +38,91 @@ class Post
     #[ORM\Column(name: 'updated_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $updatedTime;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param  int  $id
-     */
     public function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string
     {
         return $this->title;
     }
 
-    /**
-     * @param  string  $title
-     */
     public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
-    /**
-     * @return string
-     */
     public function getSlug(): string
     {
         return $this->slug;
     }
 
-    /**
-     * @param  string  $slug
-     */
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
     }
 
-    /**
-     * @return string
-     */
     public function getContent(): string
     {
         return $this->content;
     }
 
-    /**
-     * @param  string  $content
-     */
     public function setContent(string $content): void
     {
         $this->content = $content;
     }
 
-    /**
-     * @return string
-     */
     public function getExcerpt(): string
     {
         return $this->excerpt;
     }
 
-    /**
-     * @param  string  $excerpt
-     */
     public function setExcerpt(string $excerpt): void
     {
         $this->excerpt = $excerpt;
     }
 
-    /**
-     * @return string
-     */
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param  string  $status
-     */
     public function setStatus(string $status): void
     {
         $this->status = $status;
     }
 
-    /**
-     * @return int
-     */
     public function getAuthorId(): int
     {
         return $this->authorId;
     }
 
-    /**
-     * @param  int  $authorId
-     */
     public function setAuthorId(int $authorId): void
     {
         $this->authorId = $authorId;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getCreatedTime(): DateTimeImmutable
     {
         return $this->createdTime;
     }
 
-    /**
-     * @param  DateTimeImmutable  $createdTime
-     */
     public function setCreatedTime(DateTimeImmutable $createdTime): void
     {
         $this->createdTime = $createdTime;
     }
 
-    /**
-     * @return DateTimeImmutable
-     */
     public function getUpdatedTime(): DateTimeImmutable
     {
         return $this->updatedTime;
     }
 
-    /**
-     * @param  DateTimeImmutable  $updatedTime
-     */
     public function setUpdatedTime(DateTimeImmutable $updatedTime): void
     {
         $this->updatedTime = $updatedTime;
