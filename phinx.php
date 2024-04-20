@@ -1,6 +1,6 @@
 <?php
 
-$env = parse_ini_file(__DIR__ . '/.env');
+$env = @parse_ini_file(__DIR__ . '/.env');
 
 return
 [
@@ -13,7 +13,7 @@ return
         'default_environment' => 'default',
         'default' => [
 	        'adapter' => 'pgsql',
-	        'host' => 'db',
+	        'host' => $env['DB_HOST'],
 	        'name' => $env['DB_NAME'],
 	        'user' => $env['DB_USER'],
 	        'pass' => $env['DB_PASSWORD'],
