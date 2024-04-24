@@ -30,7 +30,7 @@ use DDaniel\Blog\PageControllers\AdminPageController;
 <body data-bs-theme="dark">
 <?php app()->isAuthorized ? app()->templates->include('admin/header') : null; ?>
 
-<div class="content">
+<div class="container-fluid content">
 	<?php echo $pc->content ?>
 </div>
 
