@@ -1,9 +1,9 @@
 <?php
 /**
- * @var PageController $pc
+ * @var \DDaniel\Blog\PageControllers\PageController $pc
  */
 
-use DDaniel\Blog\PageController;
+use DDaniel\Blog\PageControllers\PageController;
 
 ?>
 

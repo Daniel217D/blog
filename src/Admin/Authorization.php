@@ -20,12 +20,12 @@ class Authorization
     }
 
 
-    public function isAuthorized(): false|Author
+    public function getAuthor(): ?Author
     {
         try {
             return $this->verifyCookie();
         } catch (Exception) {
-            return false;
+            return null;
         }
     }
 
@@ -34,7 +34,7 @@ class Authorization
      */
     public function authorize(string $email, string $password): Author
     {
-        $author = $this->getAuthor($email, $password);
+        $author = $this->getAuthorForAuthorization($email, $password);
         $this->setCookie($author);
 
         return $author;
@@ -48,7 +48,7 @@ class Authorization
     /**
      * @throws AuthorizationException
      */
-    private function getAuthor(string $email, string $password): Author
+    private function getAuthorForAuthorization(string $email, string $password): Author
     {
         $author = app()
             ->entity_manager
@@ -58,7 +58,7 @@ class Authorization
             ));
 
         if (null === $author || ! $this->password->verify($password, $author->getPassword())) {
-            throw new AuthorizationException('Email not found');
+            throw new AuthorizationException('Email not found or wrong password');
         }
 
         return $author;

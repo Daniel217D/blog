@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace DDaniel\Blog;
+namespace DDaniel\Blog\PageControllers;
 
-class PageController
+class PageController extends BasePageController
 {
-    public bool $is_home_page;
+    public readonly bool $is_home_page;
 
     public function __construct(
         public string $title = '',
@@ -14,6 +14,8 @@ class PageController
         public string $content = '',
         public string $type = 'website',
     ) {
+		parent::__construct($this->title, $this->description, $this->content, $this->type);
+
         $this->is_home_page = app()->home_url === parse_url($_SERVER["REQUEST_URI"] ?? '', PHP_URL_PATH);
 
         if ($this->description === null && $this->content !== '') {

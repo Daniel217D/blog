@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var PageController $pc
  */
 
-use DDaniel\Blog\PageController;
+use DDaniel\Blog\PageControllers\PageController;
 
 ?>
 <!doctype html>

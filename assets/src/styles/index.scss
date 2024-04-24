@@ -1,25 +1,7 @@
 @import "bootstrap";
+@import "pageHeight100";
 @import "controlButtons";
 @import "logo";
-
-html, body {
-  height: 100vh;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-
-
-  > .content {
-    flex: 1 0 auto;
-  }
-
-  > header,
-  > footer {
-    flex-shrink: 0;
-  }
-}
 
 .nav-tg-logo {
   display: inline-block;

@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace DDaniel\Blog;
 
+use DDaniel\Blog\Admin\Authorization;
 use DDaniel\Blog\Articles\Article;
 use DDaniel\Blog\Articles\ArticleNotFoundException;
 use DDaniel\Blog\Articles\Articles;
+use DDaniel\Blog\PageControllers\AdminPageController;
+use DDaniel\Blog\PageControllers\BasePageController;
+use DDaniel\Blog\PageControllers\PageController;
 use Exception;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\UrlMatcher;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
-use Symfony\Component\Routing\RequestContext;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
 
 final class Router
 {
@@ -58,10 +62,19 @@ final class Router
         ));
     }
 
-    public function renderPage(PageController $page_controller): void
+	public function getRoutePath( string $name ): string {
+		return app()->site_url . $this->routes->get( $name )->getPath();
+	}
+
+	public function redirectToRoute( string $name ): never {
+		header( 'Location: ' . $this->getRoutePath( $name ) );
+		die();
+	}
+
+    public function renderPage(BasePageController $page_controller): void
     {
         app()->templates->include(
-            'wrapper',
+            $page_controller instanceof AdminPageController ? 'admin/wrapper' : 'wrapper',
             array( 'pc' => $page_controller )
         );
     }
@@ -102,6 +115,25 @@ final class Router
                 content: ( new Articles(app()->search_string) )->getContentHtml()
             ));
         });
+
+	    $this->addRoute('admin', 'GET', '/admin', function (array $params) {
+		    $this->renderPage(new AdminPageController(
+			    title: 'Admin panel',
+			    content: app()->isAuthorized ?
+				    app()->templates->include('admin/dashboard', echo: false) :
+				    app()->templates->include('admin/login', echo: false)
+		    ));
+	    });
+
+	    $this->addRoute('login', 'POST', '/login', function (array $params) {
+		    try {
+			    ( new Authorization() )->authorize( $_POST['email'] ?? '', $_POST['password'] ?? '');
+			    $this->redirectToRoute('admin');
+		    } catch (Exception $e) {
+				$this->redirectToRoute('admin'); //ToDo add error message
+		    }
+	    });
+
         $this->addRoute('article', 'GET', '/{slug}', function (array $params) {
             $this->renderPage(new PageController(
                 title: $params['slug'],

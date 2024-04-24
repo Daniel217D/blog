@@ -9,7 +9,7 @@ declare(strict_types=1);
             <div class="col-auto d-flex align-items-center my-1">
                 <a href="/" class="text-muted text-decoration-none">
                     <img src="/images/logo_white.svg" alt="Логотип белый" class="logo logo-white">
-                    <img src="/images/logo_black.svg" alt="Логотип белый" class="logo logo-black">
+                    <img src="/images/logo_black.svg" alt="Логотип черный" class="logo logo-black">
                 </a>
             </div>
 
