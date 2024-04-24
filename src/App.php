@@ -36,7 +36,7 @@ final class App
         );
         $this->search_string = isset( $_GET['s'] ) && is_string( $_GET['s'] ) ? $_GET['s'] : '';
 
-        $env = @parse_ini_file("$this->path/.env");
+        $env = @parse_ini_file("$this->path.env");
         $this->site_name = $env['APP_NAME'];
         $this->site_url = $env['APP_URL'];
         $this->debug_enabled = 'true' === $env['APP_DEBUG'];
