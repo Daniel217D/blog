@@ -1,14 +1,14 @@
 <?php
 
-namespace DDaniel\Blog\Models;
+namespace DDaniel\Blog\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
-#[ORM\Table(name: 'tags')]
-class Tag
+#[ORM\Table(name: 'categories')]
+class Category
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
@@ -24,10 +24,13 @@ class Tag
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
 
+    #[ORM\Column(name: 'parent_category_id', type: 'integer', nullable: true)]
+    private ?int $parentCategoryId;
+
     /**
      * @var Collection<int, Post>
      */
-    #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'tags')]
+    #[ORM\ManyToMany(targetEntity: Post::class, mappedBy: 'categories')]
     private Collection $posts;
 
     public function __construct()

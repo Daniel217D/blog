@@ -1,6 +1,6 @@
 <?php
 
-namespace DDaniel\Blog\Models;
+namespace DDaniel\Blog\Entities;
 
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;

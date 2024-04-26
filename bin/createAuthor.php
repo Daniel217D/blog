@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 use DDaniel\Blog\Admin\Registration;
-use DDaniel\Blog\Models\Author;
+use DDaniel\Blog\Entities\Author;
 use Doctrine\Laminas\Hydrator\DoctrineObject as DoctrineHydrator;
 
 require __DIR__ . '/../vendor/autoload.php';

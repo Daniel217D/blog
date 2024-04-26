@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
-use DDaniel\Blog\Models\Author;
+use DDaniel\Blog\Entities\Author;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -74,7 +74,7 @@ final class App
 
 	protected function initOrm(): void {
 		$config = ORMSetup::createAttributeMetadataConfiguration(
-			paths: array("{$this->path}src/Models"),
+			paths: array("{$this->path}src/Entities"),
 			isDevMode: $this->env['APP_ENV'] !== 'production',
 		);
 

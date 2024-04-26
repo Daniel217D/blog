@@ -1,6 +1,6 @@
 <?php
 
-namespace DDaniel\Blog\Models;
+namespace DDaniel\Blog\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
 

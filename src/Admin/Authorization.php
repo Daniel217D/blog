@@ -3,7 +3,7 @@
 namespace DDaniel\Blog\Admin;
 
 use DDaniel\Blog\Exceptions\AuthorizationException;
-use DDaniel\Blog\Models\Author;
+use DDaniel\Blog\Entities\Author;
 use Doctrine\ORM\Exception\ORMException;
 use Exception;
 

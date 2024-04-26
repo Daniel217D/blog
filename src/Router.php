@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
+use DDaniel\Blog\Enums\Entity;
 use Exception;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -39,12 +40,11 @@ final class Router
 
             $parameters['function']($parameters);
         } catch (ResourceNotFoundException $e) {
-            $this->sendError(404, 'Неизвестный url');
+            $this->sendError(404, 'Не найдено');
         } catch (MethodNotAllowedException $e) {
             $this->sendError(405, 'Неизвестный url');
         } catch (Exception $e) {
-            error_log('Routing error ' . $e->getMessage());
-            error_log(print_r($e, true));
+            error_log('Routing error ' . print_r($e, true));
             $this->sendError(500, 'Что-то сломалось');
         }
     }
@@ -120,11 +120,23 @@ final class Router
         }, true);
 
         $this->addRoute('adminEntity', 'GET', '/admin/{entity}', function (array $params) {
-            echo '!1!';
+            $entity = Entity::tryFrom($params['entity']);
+
+            if(null === $entity) {
+                throw new ResourceNotFoundException();
+            }
+
+            app()->templates->include('admin/wrapper', [
+                'title'   => 'Admin panel',
+                'content' => app()->templates->include('admin/' . $entity->value . '/index', echo: false)
+            ]);
         }, true);
 
         $this->addRoute('adminEntityId', 'GET', '/admin/{entity}/{id}', function (array $params) {
-            echo '!2!';
+            app()->templates->include('admin/wrapper', [
+                'title'   => 'Admin panel',
+                'content' => app()->templates->include('admin/dashboard', echo: false)
+            ]);
         }, true);
 
         //Public

@@ -2,7 +2,7 @@
 
 namespace DDaniel\Blog\Admin;
 
-use DDaniel\Blog\Models\Author;
+use DDaniel\Blog\Entities\Author;
 
 class Registration {
 	private Password $password;
