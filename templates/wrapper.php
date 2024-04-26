@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-/**
- * @var PageController $pc
- */
-
-use DDaniel\Blog\PageControllers\PageController;
+$title = $title ?? '';
+$description = $description ?? '';
+$type = $type ?? 'website';
+$content = $content ?? '';
 
 ?>
+
 <!doctype html>
 <html lang="ru">
 <head>
@@ -16,12 +16,12 @@ use DDaniel\Blog\PageControllers\PageController;
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <meta name="description" content="<?php echo $pc->description ?>">
+    <meta name="description" content="<?php echo $description ?>">
     <meta name="robots" content="follow, index, max-snippet:-1, max-video-preview:-1, max-image-preview:large">
     <meta property="og:locale" content="ru_RU">
-    <meta property="og:type" content="<?php echo $pc->type ?>">
-    <meta property="og:title" content="<?php echo $pc->title ?>">
-    <meta property="og:description" content="<?php echo $pc->description ?>">
+    <meta property="og:type" content="<?php echo $type ?>">
+    <meta property="og:title" content="<?php echo $title ?>">
+    <meta property="og:description" content="<?php echo $description ?>">
     <meta property="og:url" content="<?php echo app()->current_url ?>">
     <meta property="og:site_name" content="<?php echo app()->site_name ?>">
     <meta property="og:image" content="<?php echo app()->site_url . '/images/logo_wide.png' ?>">
@@ -38,7 +38,7 @@ use DDaniel\Blog\PageControllers\PageController;
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
-    <title><?php echo $pc->title ?></title>
+    <title><?php echo $title ?></title>
 </head>
 <body>
     <?php app()->templates->include('header'); ?>
@@ -46,16 +46,16 @@ use DDaniel\Blog\PageControllers\PageController;
     <div class="container content">
         <div class="row">
             <div class="col">
-                <?php if (! $pc->is_home_page) :
-                    ?>
+                <?php if ( ! app()->is_home_page) : ?>
                     <a href="<?php echo app()->home_url ?>" class="d-inline-block mb-2">← Назад</a>
-                    <?php
-                endif; ?>
-                <h1><?php echo $pc->title ?></h1>
-                <?php echo $pc->content ?>
+                <?php endif; ?>
+
+                <h1><?php echo $title ?></h1>
+
+                <?php echo $content ?>
             </div>
         </div>
-	    <?php app()->templates->include('controlButtons', ['pc' => $pc]); ?>
+	    <?php app()->templates->include('controlButtons'); ?>
     </div>
 
     <?php app()->templates->include('footer'); ?>

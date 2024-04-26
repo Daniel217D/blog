@@ -5,13 +5,8 @@ declare(strict_types=1);
 namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
-use DDaniel\Blog\Articles\Article;
-use DDaniel\Blog\Articles\ArticleNotFoundException;
-use DDaniel\Blog\Articles\Articles;
-use DDaniel\Blog\PageControllers\AdminPageController;
-use DDaniel\Blog\PageControllers\BasePageController;
-use DDaniel\Blog\PageControllers\PageController;
 use Exception;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
@@ -22,8 +17,6 @@ final class Router
 {
     private RouteCollection $routes;
     private RequestContext $context;
-
-    private bool $response_in_json = false;
 
     public function __construct()
     {
@@ -40,43 +33,43 @@ final class Router
         try {
             $parameters = $matcher->match(parse_url($_SERVER["REQUEST_URI"] ?? '', PHP_URL_PATH));
 
-            $this->response_in_json = str_contains($parameters['_route'], '_api') || str_contains(strtolower(getallheaders()['Accept'] ?? ''), 'json');
+            if ($parameters['mustBeAuthorized'] && ! app()->isAuthorized) {
+                $this->sendError(403, 'Нет доступа');
+            }
 
             $parameters['function']($parameters);
-        } catch (ArticleNotFoundException $e) {
-            $this->send404($e->getMessage());
         } catch (ResourceNotFoundException $e) {
-            $this->send404('Неизвестный url');
+            $this->sendError(404, 'Неизвестный url');
+        } catch (MethodNotAllowedException $e) {
+            $this->sendError(405, 'Неизвестный url');
         } catch (Exception $e) {
             error_log('Routing error ' . $e->getMessage());
-            $this->send404('Что-то сломалось');
+            error_log(print_r($e, true));
+            $this->sendError(500, 'Что-то сломалось');
         }
     }
 
-    public function addRoute(string $name, string|array $methods, string $path, callable $function): void
+    public function addRoute(string $name, string|array $methods, string $path, callable $function, $mustBeAuthorized): void
     {
-        $this->routes->add($name, new Route(
-            path: $path,
-            defaults: [ 'function' => $function ],
-            methods: is_array($methods) ? $methods : [ $methods ]
-        ));
+        $this->routes->add(
+            $name,
+            new Route(
+                path: $path,
+                defaults: ['function' => $function, 'mustBeAuthorized' => $mustBeAuthorized],
+                methods: is_array($methods) ? $methods : [$methods]
+            )
+        );
     }
 
-	public function getRoutePath( string $name ): string {
-		return app()->site_url . $this->routes->get( $name )->getPath();
-	}
-
-	public function redirectToRoute( string $name ): never {
-		header( 'Location: ' . $this->getRoutePath( $name ) );
-		die();
-	}
-
-    public function renderPage(BasePageController $page_controller): void
+    public function getRoutePath(string $name): string
     {
-        app()->templates->include(
-            $page_controller instanceof AdminPageController ? 'admin/wrapper' : 'wrapper',
-            array( 'pc' => $page_controller )
-        );
+        return app()->site_url . $this->routes->get($name)->getPath();
+    }
+
+    public function redirectToRoute(string $name): never
+    {
+        header('Location: ' . $this->getRoutePath($name));
+        die();
     }
 
     public function sendJson(mixed $data): void
@@ -88,65 +81,63 @@ final class Router
         die();
     }
 
-    public function send404(string $message = ''): void
+    public function sendError(int $code, string $message = ''): void
     {
-        http_response_code(404);
+        http_response_code($code);
 
-        if ($this->response_in_json) {
-            $this->sendJson(array(
-                'success' => false,
-                'message' => $message
-            ));
-        }
-
-        $this->renderPage(new PageController(
-            title: '404',
-            description: $message ?: 'Страница не найдена',
-            content: $message ?: 'Страница не найдена'
-        ));
+        app()->templates->include('wrapper', [
+            'title'       => (string)$code,
+            'description' => $message ?: 'Страница не найдена',
+            'content'     => $message ?: 'Страница не найдена',
+        ]);
     }
 
     private function initRoutes(): void
     {
+        //Login
+        $this->addRoute('login', 'GET', '/login', function (array $params) {
+            app()->templates->include('admin/wrapper', [
+                'title'   => 'Admin panel',
+                'content' => app()->templates->include('admin/login', echo: false)
+            ]);
+        }, false);
+
+        $this->addRoute('login@post', 'POST', '/login', function (array $params) {
+            try {
+                (new Authorization())->authorize($_POST['email'] ?? '', $_POST['password'] ?? '');
+                $this->redirectToRoute('admin');
+            } catch (Exception $e) {
+                $this->redirectToRoute('login'); //ToDo add error message
+            }
+        }, false);
+
+        //Admin
+        $this->addRoute('admin', 'GET', '/admin', function (array $params) {
+            app()->templates->include('admin/wrapper', [
+                'title'   => 'Admin panel',
+                'content' => app()->templates->include('admin/dashboard', echo: false)
+            ]);
+        }, true);
+
+        $this->addRoute('adminEntity', 'GET', '/admin/{entity}', function (array $params) {
+            echo '!1!';
+        }, true);
+
+        $this->addRoute('adminEntityId', 'GET', '/admin/{entity}/{id}', function (array $params) {
+            echo '!2!';
+        }, true);
+
+        //Public
         $this->addRoute('home', 'GET', '/', function () {
-            $this->renderPage(new PageController(
-                title: 'Блог о Web разработке Даниила Дубченко',
-                description: 'Блог Даниила Дубченко о web-разработке',
-                content: ( new Articles(app()->search_string) )->getContentHtml()
-            ));
-        });
+            app()->templates->include('wrapper', [
+                'title'       => 'Заметки о Web разработке Д. Дубченко',
+                'description' => 'Заметки  о web-разработке Д. Дубченко',
+                'content'     => 'articles here',
+            ]);
+        }, false);
 
-	    $this->addRoute('admin', 'GET', '/admin', function (array $params) {
-		    $this->renderPage(new AdminPageController(
-			    title: 'Admin panel',
-			    content: app()->isAuthorized ?
-				    app()->templates->include('admin/dashboard', echo: false) :
-				    app()->templates->include('admin/login', echo: false)
-		    ));
-	    });
-
-	    $this->addRoute('login', 'POST', '/login', function (array $params) {
-		    try {
-			    ( new Authorization() )->authorize( $_POST['email'] ?? '', $_POST['password'] ?? '');
-			    $this->redirectToRoute('admin');
-		    } catch (Exception $e) {
-				$this->redirectToRoute('admin'); //ToDo add error message
-		    }
-	    });
-
-        $this->addRoute('article', 'GET', '/{slug}', function (array $params) {
-            $this->renderPage(new PageController(
-                title: $params['slug'],
-                content: Article::foundOrFail($params['slug'])->getContentHtml(),
-                type: 'article'
-            ));
-        });
-        $this->addRoute('article_api', 'GET', '/api/articles/{slug}', function (array $params) {
-            $content = Article::foundOrFail($params['slug'])->getContentHtml();
-            $this->sendJson(array(
-                'success' => true,
-                'content' => $content,
-            ));
-        });
+        $this->addRoute('article', 'GET', '{entity}/{slug}', function (array $params) {
+            var_dump($params['entity'], $params['slug']);
+        }, false);
     }
 }

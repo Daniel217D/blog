@@ -15,6 +15,7 @@ final class App
     public readonly string $path;
     public readonly string $home_url;
     public readonly string $current_url;
+    public readonly bool $is_home_page;
     public readonly string $search_string;
 
     public readonly string $site_name;
@@ -36,22 +37,24 @@ final class App
     public function __construct()
     {
         $this->path = dirname(__DIR__) . '/';
-        $this->home_url = '/';
-        $this->current_url = sprintf(
-            "%s://%s%s",
-            isset($_SERVER['HTTPS']) ? 'http' : 'https',
-            $_SERVER['HTTP_HOST'] ?? '',
-            $_SERVER['REQUEST_URI'] ?? ''
-        );
-        $this->search_string = isset( $_GET['s'] ) && is_string( $_GET['s'] ) ? $_GET['s'] : '';
+
+        ini_set('log_errors', 1);
+        ini_set('error_log', "{$this->path}error.log");
 
         $this->env = @parse_ini_file("$this->path.env");
         $this->site_name = $this->env['APP_NAME'];
         $this->site_url = $this->env['APP_URL'];
         $this->debug_enabled = 'true' === $this->env['APP_DEBUG'];
 
-        ini_set('log_errors', 1);
-        ini_set('error_log', "{$this->path}error.log");
+        $this->home_url = $this->site_url;
+        $this->current_url = sprintf(
+            "%s://%s%s",
+            isset($_SERVER['HTTPS']) ? 'https' : 'http',
+            $_SERVER['HTTP_HOST'] ?? '',
+            rtrim($_SERVER['REQUEST_URI']??'', '/') ?? ''
+        );
+        $this->is_home_page = $this->current_url === $this->site_url;
+        $this->search_string = isset( $_GET['s'] ) && is_string( $_GET['s'] ) ? $_GET['s'] : '';
     }
 
     public function init(): App

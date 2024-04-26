@@ -16,14 +16,7 @@ class DefaultStructureSeeder extends AbstractSeed
      */
     public function run(): void
     {
-        $tableUsers = $this->table('authors');
-        $tableUsers->insert([
-            'login'    => 'test',
-            'password' => 'test',
-            'name'     => 'test',
-            'email'    => 'test',
-            'role'     => 'test',
-        ])->saveData();
+        shell_exec('php /var/www/html/bin/createAuthor.php test 123456 test test@test.com');
 
         $tablePosts = $this->table('posts');
 

@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-/**
- * @var AdminPageController $pc
- */
-
-use DDaniel\Blog\PageControllers\AdminPageController;
+$title = $title ?? '';
+$content = $content ?? '';
 
 ?>
 <!doctype html>
@@ -25,13 +22,13 @@ use DDaniel\Blog\PageControllers\AdminPageController;
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
 
-    <title><?php echo $pc->title ?></title>
+    <title><?php echo $title ?></title>
 </head>
 <body data-bs-theme="dark">
-<?php app()->isAuthorized ? app()->templates->include('admin/header') : null; ?>
+<?php app()->isAuthorized ? app()->templates->include('admin/sidebar') : null; ?>
 
 <div class="container-fluid content">
-	<?php echo $pc->content ?>
+	<?php echo $content ?>
 </div>
 
 
