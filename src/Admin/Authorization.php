@@ -51,7 +51,7 @@ class Authorization
     private function getAuthorForAuthorization(string $email, string $password): Author
     {
         $author = app()
-            ->entity_manager
+            ->em
             ->getRepository(Author::class)
             ->findOneBy(array(
                 'email' => $email,
@@ -82,7 +82,7 @@ class Authorization
 
         try {
             $author = app()
-                ->entity_manager
+                ->em
                 ->find(Author::class, (int)$id);
         } catch (ORMException $e) {
             throw new AuthorizationException('Author not logged in');

@@ -40,7 +40,7 @@ final class Router
 
             $parameters['function']($parameters);
         } catch (ResourceNotFoundException $e) {
-            $this->sendError(404, 'Не найдено');
+            $this->sendError(404, $e->getMessage() ?: 'Не найдено');
         } catch (MethodNotAllowedException $e) {
             $this->sendError(405, 'Неизвестный url');
         } catch (Exception $e) {
@@ -61,9 +61,23 @@ final class Router
         );
     }
 
-    public function getRoutePath(string $name): string
+    public function getRoutePath(string $name, array $replacements = []): string
     {
-        return app()->site_url . $this->routes->get($name)->getPath();
+        $relativePath = $this->routes->get($name)->getPath();
+
+        foreach ($replacements as $search => $replace) {
+            $relativePath = str_replace('{'.$search.'}', (string)$replace, $relativePath);
+        }
+
+        return app()->site_url . $relativePath;
+    }
+
+    public function getRoutePathForEntity(object $entity): string
+    {
+        return $this->getRoutePath('adminEntityEdit', [
+            'entity' => Entity::fromEntityClass($entity::class)->value,
+            'id'     => $entity->getId(),
+        ]);
     }
 
     public function redirectToRoute(string $name): never
@@ -90,6 +104,8 @@ final class Router
             'description' => $message ?: 'Страница не найдена',
             'content'     => $message ?: 'Страница не найдена',
         ]);
+
+        die();
     }
 
     private function initRoutes(): void
@@ -119,7 +135,7 @@ final class Router
             ]);
         }, true);
 
-        $this->addRoute('adminEntity', 'GET', '/admin/{entity}', function (array $params) {
+        $this->addRoute('adminEntitiesList', 'GET', '/admin/{entity}', function (array $params) {
             $entity = Entity::tryFrom($params['entity']);
 
             if(null === $entity) {
@@ -127,15 +143,44 @@ final class Router
             }
 
             app()->templates->include('admin/wrapper', [
-                'title'   => 'Admin panel',
-                'content' => app()->templates->include('admin/' . $entity->value . '/index', echo: false)
+                'title'   => $entity->name . ' list',
+                'content' => app()->templates->include('admin/' . $entity->value . '/list', [
+                    'entities' => app()->em->getRepository($entity->getEntityClass())->findAll()
+                ], false)
             ]);
         }, true);
 
-        $this->addRoute('adminEntityId', 'GET', '/admin/{entity}/{id}', function (array $params) {
+        $this->addRoute('adminEntityNew', 'GET', '/admin/{entity}/new', function (array $params) {
+            $entity = Entity::tryFrom($params['entity']);
+
+            if(null === $entity) {
+                throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
+            }
+
             app()->templates->include('admin/wrapper', [
-                'title'   => 'Admin panel',
-                'content' => app()->templates->include('admin/dashboard', echo: false)
+                'title'   => $entity->name . ' new',
+                'content' => app()->templates->include('admin/' . $entity->value . '/new', echo: false),
+            ]);
+        }, true);
+
+        $this->addRoute('adminEntityEdit', 'GET', '/admin/{entity}/{id}', function (array $params) {
+            $entity = Entity::tryFrom($params['entity']);
+
+            if(null === $entity) {
+                throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
+            }
+
+            $entityObject = app()->em->find($entity->getEntityClass(), $params['id']);
+
+            if(null === $entityObject) {
+                throw new ResourceNotFoundException("Entity {$params['entity']} with id {$params['id']} not exist");
+            }
+
+            app()->templates->include('admin/wrapper', [
+                'title'   => sprintf('%s #%d edit', $entity->name, $entityObject->getId()),
+                'content' => app()->templates->include('admin/' . $entity->value . '/edit', [
+                    'entity' => $entityObject
+                ], false)
             ]);
         }, true);
 

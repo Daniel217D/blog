@@ -7,5 +7,5 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 require __DIR__ . '/../vendor/autoload.php';
 
 ConsoleRunner::run(
-    new SingleManagerProvider(app()->entity_manager)
+    new SingleManagerProvider(app()->em)
 );

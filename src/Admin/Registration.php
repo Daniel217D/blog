@@ -20,8 +20,8 @@ class Registration {
 	public function register( Author $author, string $password ): Author {
 		$author->setPassword( $this->password->hash( $password ) );
 
-		app()->entity_manager->persist( $author );
-		app()->entity_manager->flush();
+		app()->em->persist( $author );
+		app()->em->flush();
 
 		return $author;
 	}

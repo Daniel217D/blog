@@ -30,7 +30,7 @@ final class App
 
 	public readonly Router $router;
 
-	public readonly EntityManager $entity_manager;
+	public readonly EntityManager $em;
 
 	private readonly array $env;
 
@@ -87,7 +87,7 @@ final class App
 			'password' => $this->env['DB_PASSWORD'],
 		], $config);
 
-		$this->entity_manager = new EntityManager($connection, $config);
+		$this->em = new EntityManager($connection, $config);
 	}
 
     public function start(): void
