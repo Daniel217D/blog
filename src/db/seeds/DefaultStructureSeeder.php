@@ -26,7 +26,7 @@ class DefaultStructureSeeder extends AbstractSeed
                 'slug'      => 'slug' . $i . '_' . rand(100, 999),
                 'content'   => 'content' . $i . '_' . rand(100, 999),
                 'excerpt'   => 'excerpt' . $i . '_' . rand(100, 999),
-                'status'    => 'status' . $i . '_' . rand(100, 999),
+                'status'    => 'published',
                 'author_id' => 1,
             ]);
         }

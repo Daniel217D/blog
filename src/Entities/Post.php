@@ -3,6 +3,7 @@
 namespace DDaniel\Blog\Entities;
 
 use DateTimeImmutable;
+use DDaniel\Blog\Enums\PostStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -28,8 +29,8 @@ class Post
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $excerpt;
 
-    #[ORM\Column(type: 'string', length: 15)]
-    private string $status;
+    #[ORM\Column(type: 'string', length: 15, enumType: PostStatus::class)]
+    private PostStatus $status;
 
     #[ORM\Column(name: 'author_id', type: 'integer')]
     private int $authorId;
@@ -112,12 +113,12 @@ class Post
         $this->excerpt = $excerpt;
     }
 
-    public function getStatus(): string
+    public function getStatus(): PostStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): void
+    public function setStatus(PostStatus $status): void
     {
         $this->status = $status;
     }
@@ -170,5 +171,15 @@ class Post
     public function setCategories(ArrayCollection|Collection $categories): void
     {
         $this->categories = $categories;
+    }
+
+    public function getTags(): ArrayCollection|Collection
+    {
+        return $this->tags;
+    }
+
+    public function setTags(ArrayCollection|Collection $tags): void
+    {
+        $this->tags = $tags;
     }
 }

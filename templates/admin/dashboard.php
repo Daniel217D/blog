@@ -1,1 +1,1 @@
-dashboard
+There will be some info. Now use sidebar to navigate

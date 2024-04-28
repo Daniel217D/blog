@@ -44,7 +44,7 @@ final class App
         $this->env = @parse_ini_file("$this->path.env");
         $this->site_name = $this->env['APP_NAME'];
         $this->site_url = $this->env['APP_URL'];
-        $this->debug_enabled = 'true' === $this->env['APP_DEBUG'];
+        $this->debug_enabled = '1' === $this->env['APP_DEBUG'];
 
         $this->home_url = $this->site_url;
         $this->current_url = sprintf(

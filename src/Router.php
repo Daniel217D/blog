@@ -63,7 +63,7 @@ final class Router
 
     public function getRoutePath(string $name, array $replacements = []): string
     {
-        $relativePath = $this->routes->get($name)->getPath();
+        $relativePath = $this->routes->get($name)?->getPath();
 
         foreach ($replacements as $search => $replace) {
             $relativePath = str_replace('{'.$search.'}', (string)$replace, $relativePath);
@@ -72,11 +72,19 @@ final class Router
         return app()->site_url . $relativePath;
     }
 
-    public function getRoutePathForEntity(object $entity): string
+    public function getUrlForEntityEditor(object $entity): string
     {
         return $this->getRoutePath('adminEntityEdit', [
             'entity' => Entity::fromEntityClass($entity::class)->value,
             'id'     => $entity->getId(),
+        ]);
+    }
+
+    public function getUrlForEntityView(object $entity): string
+    {
+        return $this->getRoutePath('entity', [
+            'entity' => Entity::fromEntityClass($entity::class)->value,
+            'slug'   => $entity->getSlug(),
         ]);
     }
 
@@ -193,8 +201,31 @@ final class Router
             ]);
         }, false);
 
-        $this->addRoute('article', 'GET', '{entity}/{slug}', function (array $params) {
-            var_dump($params['entity'], $params['slug']);
+        $this->addRoute('entitiesList', 'GET', '{entity}', function (array $params) {
+
+        }, false);
+
+        $this->addRoute('entity', 'GET', '{entity}/{slug}', function (array $params) {
+            $entity = Entity::tryFrom($params['entity']);
+
+            if(null === $entity || $entity !== Entity::Post) { // ToDo support all entities.
+                throw new ResourceNotFoundException();
+            }
+
+            $entityObject = app()->em->getRepository($entity->getEntityClass())->findOneBy([
+                'slug' => $params['slug']
+            ]);
+
+            if(null === $entityObject) {
+                throw new ResourceNotFoundException();
+            }
+
+            app()->templates->include('wrapper', [
+                'title'   => sprintf('%s %s', $entity->name, $entityObject->getTitle()),
+                'content' => app()->templates->include('entities/' . $entity->value . '/item', [
+                    'entity' => $entityObject
+                ], false)
+            ]);
         }, false);
     }
 }
