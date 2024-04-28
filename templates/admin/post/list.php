@@ -19,15 +19,20 @@ use DDaniel\Blog\Entities\Post;
     <tbody>
     <?php foreach ($entities as $entity) : ?>
         <tr>
-            <th>
-                <a href="<?php echo app()->router->getUrlForEntityEditor($entity) ?>">
+            <td>
+                <a href="<?php echo app()->router->getUrlForEntityAdmin($entity) ?>">
                     #<?php echo $entity->getId() ?>
                 </a>
-            </th>
+                <br>
+                <form action="<?php echo app()->router->getUrlForEntityAdmin($entity) ?>">
+                    <a href="#" class="delete" onclick="event.preventDefault(); this.closest('form').submit()">delete</a>
+                    <input type="hidden" name="method" value="delete">
+                </form>
+            </td>
             <td>
                 <span><?php echo $entity->getTitle() ?></span>
                 <br>
-                <a href="<?php echo app()->router->getUrlForEntityView($entity)?>" class="small"><?php echo $entity->getSlug() ?></a>
+                <a href=" <?php echo app()->router->getUrlForEntityFrontend($entity)?>" class="small"><?php echo $entity->getSlug() ?></a>
             </td>
             <td><?php echo $entity->getStatus()->name ?></td>
             <td><?php echo $entity->getAuthor()->getName() ?></td>

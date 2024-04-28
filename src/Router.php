@@ -73,7 +73,7 @@ final class Router
         return app()->site_url . $relativePath;
     }
 
-    public function getUrlForEntityEditor(object $entity): string
+    public function getUrlForEntityAdmin(object $entity): string
     {
         return $this->getRoutePath('adminEntityEdit', [
             'entity' => Entity::fromEntityClass($entity::class)->value,
@@ -81,7 +81,7 @@ final class Router
         ]);
     }
 
-    public function getUrlForEntityView(object $entity): string
+    public function getUrlForEntityFrontend(object $entity): string
     {
         return $this->getRoutePath('entity', [
             'entity' => Entity::fromEntityClass($entity::class)->value,
@@ -115,6 +115,34 @@ final class Router
         ]);
 
         die();
+    }
+
+    public function getEntityType(array $params): Entity
+    {
+        $entity = Entity::tryFrom($params['entity']);
+
+        if(null === $entity) {
+            throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
+        }
+
+        return $entity;
+    }
+
+    public function getEntity(array $params): object
+    {
+        $entity = Entity::tryFrom($params['entity']);
+
+        if(null === $entity) {
+            throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
+        }
+
+        $entityObject = app()->em->find($this->getEntityType($params)->getEntityClass(), $params['id']);
+
+        if(null === $entityObject) {
+            throw new ResourceNotFoundException("Entity {$params['entity']} with id {$params['id']} not exist");
+        }
+
+        return $entityObject;
     }
 
     private function initRoutes(): void
@@ -160,11 +188,7 @@ final class Router
         }, true);
 
         $this->addRoute('adminEntityNew', 'GET', '/admin/{entity}/new', function (array $params) {
-            $entity = Entity::tryFrom($params['entity']);
-
-            if(null === $entity) {
-                throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
-            }
+            $entity = $this->getEntityType($params);
 
             app()->templates->include('admin/wrapper', [
                 'title'   => $entity->name . ' new',
@@ -173,52 +197,46 @@ final class Router
         }, true);
 
         $this->addRoute('adminEntityEdit', 'GET', '/admin/{entity}/{id}', function (array $params) {
-            $entity = Entity::tryFrom($params['entity']);
-
-            if(null === $entity) {
-                throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
-            }
-
-            $entityObject = app()->em->find($entity->getEntityClass(), $params['id']);
-
-            if(null === $entityObject) {
-                throw new ResourceNotFoundException("Entity {$params['entity']} with id {$params['id']} not exist");
-            }
+            $entityType = $this->getEntityType($params);
+            $entity = $this->getEntity($params);
 
             app()->templates->include('admin/wrapper', [
-                'title'   => sprintf('%s #%d edit', $entity->name, $entityObject->getId()),
-                'content' => app()->templates->include('admin/' . $entity->value . '/edit', [
-                    'entity' => $entityObject
+                'title'   => sprintf('%s #%d edit', $entityType->name, $entity->getId()),
+                'content' => app()->templates->include('admin/' . $entityType->value . '/edit', [
+                    'entity' => $entity
                 ], false)
             ]);
         }, true);
 
         $this->addRoute('adminEntityEdit@patch', 'PATCH', '/admin/{entity}/{id}', function (array $params) {
-            $entity = Entity::tryFrom($params['entity']);
-
-            if(null === $entity) {
-                throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
-            }
-
-            $entityObject = app()->em->find($entity->getEntityClass(), $params['id']);
-
-            if(null === $entityObject) {
-                throw new ResourceNotFoundException("Entity {$params['entity']} with id {$params['id']} not exist");
-            }
+            $entityType = $this->getEntityType($params);
+            $entity = $this->getEntity($params);
 
             foreach ($_POST as $prop => $value) {
                 $methodName = 'set'. ucfirst($prop);
 
-                if(method_exists($entityObject, $methodName)) {
-                    $entityObject->{$methodName}($value);
+                if(method_exists($entity, $methodName)) {
+                    $entity->{$methodName}($value);
                 }
             }
 
             app()->em->flush();
 
             $this->redirectToRoute('adminEntityEdit', [
-                'entity' => $entity->value,
-                'id'     => $entityObject->getId(),
+                'entity' => $entityType->value,
+                'id'     => $entity->getId(),
+            ]);
+        }, true);
+
+        $this->addRoute('adminEntityEdit@delete', 'DELETE', '/admin/{entity}/{id}', function (array $params) {
+            $entityType = $this->getEntityType($params);
+            $entity = $this->getEntity($params);
+
+            app()->em->remove($entity);
+            app()->em->flush();
+
+            $this->redirectToRoute('adminEntitiesList', [
+                'entity' => $entityType->value
             ]);
         }, true);
 

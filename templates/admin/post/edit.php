@@ -8,7 +8,7 @@ use DDaniel\Blog\Enums\PostStatus;
 
 ?>
 
-<form action="<?php echo app()->router->getUrlForEntityEditor($entity)?>" method="post">
+<form action="<?php echo app()->router->getUrlForEntityAdmin($entity)?>" method="post">
     <input type="hidden" name="method" value="patch">
 
     <button class="btn btn-primary mb-3" type="submit">Сохранить</button>

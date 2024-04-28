@@ -27,3 +27,10 @@
   margin-left: var(--sidebar-width);
   margin-top: 20px;
 }
+
+.delete {
+  @extend .small;
+
+  cursor: pointer;
+  color: var(--bs-danger);
+}
