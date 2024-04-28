@@ -31,7 +31,11 @@ $content = $content ?? '';
 	<?php echo $content ?>
 </div>
 
-
+<script>
+    window.adminJsConfig = {
+        jsPath: '<?php echo app()->assets->getCssUrl('index') ?>'
+    }
+</script>
 <?php app()->assets->addJs('admin') ?>
 </body>
 </html>

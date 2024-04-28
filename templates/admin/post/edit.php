@@ -36,12 +36,14 @@ use DDaniel\Blog\Enums\PostStatus;
     <?php endforeach; ?>
 </select>
 
-<div class="form-floating mb-3">
+<div class="form-floating mb-3" id="contentContainer">
     <textarea class="form-control"
               id="content"
               placeholder="Content"
               style="min-height: 500px"><?php echo $entity->getContent() ?></textarea>
     <label for="content">Content</label>
+    <iframe id="contentRenderer" style="display: none"  ></iframe>
+    <button class="btn btn-primary" id="contentToggleView"><></button>
 </div>
 
 <div class="form-floating mb-3">
