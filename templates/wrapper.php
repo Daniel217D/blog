@@ -46,10 +46,6 @@ $content = $content ?? '';
     <div class="container content">
         <div class="row">
             <div class="col">
-                <?php if ( ! app()->is_home_page) : ?>
-                    <a href="<?php echo app()->home_url ?>" class="d-inline-block mb-2">← Назад</a>
-                <?php endif; ?>
-
                 <h1><?php echo $title ?></h1>
 
                 <?php echo $content ?>
