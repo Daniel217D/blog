@@ -89,9 +89,9 @@ final class Router
         ]);
     }
 
-    public function redirectToRoute(string $name): never
+    public function redirectToRoute(string $name, array $replacements = []): never
     {
-        header('Location: ' . $this->getRoutePath($name));
+        header('Location: ' . $this->getRoutePath($name, $replacements));
         die();
     }
 
