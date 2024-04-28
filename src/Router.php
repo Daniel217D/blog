@@ -193,6 +193,35 @@ final class Router
             ]);
         }, true);
 
+        $this->addRoute('adminEntityEdit@patch', 'PATCH', '/admin/{entity}/{id}', function (array $params) {
+            $entity = Entity::tryFrom($params['entity']);
+
+            if(null === $entity) {
+                throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
+            }
+
+            $entityObject = app()->em->find($entity->getEntityClass(), $params['id']);
+
+            if(null === $entityObject) {
+                throw new ResourceNotFoundException("Entity {$params['entity']} with id {$params['id']} not exist");
+            }
+
+            foreach ($_POST as $prop => $value) {
+                $methodName = 'set'. ucfirst($prop);
+
+                if(method_exists($entityObject, $methodName)) {
+                    $entityObject->{$methodName}($value);
+                }
+            }
+
+            app()->em->flush();
+
+            $this->redirectToRoute('adminEntityEdit', [
+                'entity' => $entity->value,
+                'id'     => $entityObject->getId(),
+            ]);
+        }, true);
+
         //Public
         $this->addRoute('home', 'GET', '/', function () {
             $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
