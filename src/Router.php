@@ -6,6 +6,7 @@ namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
 use DDaniel\Blog\Enums\Entity;
+use DDaniel\Blog\Enums\PostStatus;
 use Exception;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
@@ -201,39 +202,29 @@ final class Router
             ]);
         }, false);
 
-        $this->addRoute('entitiesList', 'GET', '{entity}', function (array $params) {
-            $entity = Entity::tryFrom($params['entity']);
-
-            if(null === $entity) {
-                throw new ResourceNotFoundException();
-            }
+        $this->addRoute('entitiesList', 'GET', 'post', function (array $params) {
+            $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
+                'status' => PostStatus::Published
+            ]);
 
             app()->templates->include('wrapper', [
-                'title'   => $entity->name . ' list',
-                'content' => app()->templates->include('entities/' . $entity->value . '/list', [
-                    'entities' => app()->em->getRepository($entity->getEntityClass())->findAll()
+                'title'   => Entity::Post->name . ' list',
+                'content' => app()->templates->include('entities/' . Entity::Post->value . '/list', [
+                    'entities' => $entities
                 ], false)
             ]);
         }, false);
 
-        $this->addRoute('entity', 'GET', '{entity}/{slug}', function (array $params) {
-            $entity = Entity::tryFrom($params['entity']);
-
-            if(null === $entity || $entity !== Entity::Post) { // ToDo support all entities.
-                throw new ResourceNotFoundException();
-            }
-
-            $entityObject = app()->em->getRepository($entity->getEntityClass())->findOneBy([
-                'slug' => $params['slug']
-            ]);
+        $this->addRoute('entity', 'GET', 'post/{slug}', function (array $params) {
+            $entityObject = app()->em->getRepository(Entity::Post->getEntityClass())->findOneBySlug($params['slug']);
 
             if(null === $entityObject) {
                 throw new ResourceNotFoundException();
             }
 
             app()->templates->include('wrapper', [
-                'title'   => sprintf('%s %s', $entity->name, $entityObject->getTitle()),
-                'content' => app()->templates->include('entities/' . $entity->value . '/item', [
+                'title'   => sprintf('%s %s', Entity::Post->name, $entityObject->getTitle()),
+                'content' => app()->templates->include('entities/' . Entity::Post->value . '/item', [
                     'entity' => $entityObject
                 ], false)
             ]);
