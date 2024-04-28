@@ -202,7 +202,18 @@ final class Router
         }, false);
 
         $this->addRoute('entitiesList', 'GET', '{entity}', function (array $params) {
+            $entity = Entity::tryFrom($params['entity']);
 
+            if(null === $entity) {
+                throw new ResourceNotFoundException();
+            }
+
+            app()->templates->include('wrapper', [
+                'title'   => $entity->name . ' list',
+                'content' => app()->templates->include('entities/' . $entity->value . '/list', [
+                    'entities' => app()->em->getRepository($entity->getEntityClass())->findAll()
+                ], false)
+            ]);
         }, false);
 
         $this->addRoute('entity', 'GET', '{entity}/{slug}', function (array $params) {
