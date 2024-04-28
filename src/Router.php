@@ -154,7 +154,7 @@ final class Router
             app()->templates->include('admin/wrapper', [
                 'title'   => $entity->name . ' list',
                 'content' => app()->templates->include('admin/' . $entity->value . '/list', [
-                    'entities' => app()->em->getRepository($entity->getEntityClass())->findAll()
+                    'entities' => app()->em->getRepository($entity->getEntityClass())->findBy([], ['id' => 'DESC'])
                 ], false)
             ]);
         }, true);
