@@ -195,10 +195,16 @@ final class Router
 
         //Public
         $this->addRoute('home', 'GET', '/', function () {
+            $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
+                'status' => PostStatus::Published
+            ]);
+
             app()->templates->include('wrapper', [
-                'title'       => 'Заметки о Web разработке Д. Дубченко',
-                'description' => 'Заметки  о web-разработке Д. Дубченко',
-                'content'     => 'articles here',
+                'title'       => 'Web разработка от Даниила Дубченко',
+                'description' => 'Web разработка от Даниила Дубченко',
+                'content' => app()->templates->include('entities/' . Entity::Post->value . '/list', [
+                    'entities' => $entities
+                ], false)
             ]);
         }, false);
 

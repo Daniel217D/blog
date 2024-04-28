@@ -46,8 +46,6 @@ $content = $content ?? '';
     <div class="container content">
         <div class="row">
             <div class="col">
-                <h1><?php echo $title ?></h1>
-
                 <?php echo $content ?>
             </div>
         </div>
