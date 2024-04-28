@@ -23,7 +23,7 @@ final class Router
     public function __construct()
     {
         $this->routes  = new RouteCollection();
-        $this->context = new RequestContext($_SERVER['REQUEST_URI'] ?? '', $_SERVER['REQUEST_METHOD'] ?? '');
+        $this->context = new RequestContext($_SERVER['REQUEST_URI'] ?? '', $_REQUEST['method'] ?? $_SERVER['REQUEST_METHOD'] ?? '');
 
         $this->initRoutes();
     }
