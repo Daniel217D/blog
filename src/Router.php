@@ -320,6 +320,7 @@ final class Router
 
             app()->templates->include('wrapper', [
                 'title'   => sprintf('%s %s', Entity::Post->name, $post->getTitle()),
+                'description' => $post->getExcerpt(),
                 'content' => app()->templates->include('entities/' . Entity::Post->value . '/item', [
                     'entity' => $post
                 ], false)
