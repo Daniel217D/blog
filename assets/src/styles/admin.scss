@@ -1,0 +1,36 @@
+@import "bootstrap";
+@import "logo";
+@import "signinForm";
+@import "contentRenderer";
+
+:root {
+  --sidebar-width: 150px;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  padding: 1rem;
+  border-right: 1px solid var(--bs-border-color);
+
+  &__logo {
+    display: inline-block;
+    margin-bottom: 20px;
+  }
+}
+
+.content {
+  width: calc(100% - var(--sidebar-width));
+  margin-left: var(--sidebar-width);
+  margin-top: 20px;
+}
+
+.delete {
+  @extend .small;
+
+  cursor: pointer;
+  color: var(--bs-danger);
+}

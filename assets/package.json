@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "description": "",
     "scripts": {
-        "start": "parcel src/index.js --dist-dir ../public/assets",
-        "build": "parcel build src/index.js --dist-dir ../public/assets --no-source-maps --no-content-hash"
+        "start": "parcel src/index.js src/admin.js --dist-dir ../public/assets",
+        "build": "parcel build src/index.js src/admin.js --dist-dir ../public/assets --no-source-maps --no-content-hash"
     },
     "author": "",
     "license": "ISC",

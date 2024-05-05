@@ -12,6 +12,11 @@ class Assets
     ) {
     }
 
+    public function getCssUrl($file_name): string
+    {
+        return "$this->assets_url/$file_name.css";
+    }
+
     public function addCss(string $file_name): void
     {
         $ver = filemtime("$this->assets_path/$file_name.css");
@@ -20,8 +25,10 @@ class Assets
             return;
         }
 
+        $file_url = $this->getCssUrl($file_name);
+
         echo <<<HTML
-<link rel="stylesheet" href="{$this->assets_url}/$file_name.css?ver=$ver">
+<link rel="stylesheet" href="$file_url?ver=$ver">
 HTML;
     }
 

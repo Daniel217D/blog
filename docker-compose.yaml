@@ -4,6 +4,7 @@ services:
   php:
     build:
       context: docker/php
+    restart: always
     environment:
       HISTFILE: /root/history/.history
       ENV: /root/.bashrc
@@ -14,6 +15,7 @@ services:
 
   nginx:
     image: nginx:1.24-alpine3.17
+    restart: always
     depends_on:
       - php
     volumes:
@@ -22,6 +24,31 @@ services:
       - php_socket:/var/run/php
     ports:
       - '8080:80'
+
+  db:
+    image: postgres:16.2-alpine3.19
+    shm_size: 128mb
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./db/entrypoint:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8.5
+    user: root
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PG_ADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PG_ADMIN_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+    depends_on:
+      - db
+    volumes:
+      - ./db/pgadmin:/var/lib/pgadmin
+    ports:
+      - "5050:80"
 
 volumes:
   php_history: ~

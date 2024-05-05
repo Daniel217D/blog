@@ -1,9 +1,9 @@
 .idea
-content
 vendor
 assets/node_modules
 assets/.parcel-cache
 public/assets
+/db
 .env
 error.log
 docker-compose.override.yaml
