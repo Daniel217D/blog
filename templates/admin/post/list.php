@@ -7,6 +7,8 @@ use DDaniel\Blog\Entities\Post;
 
 ?>
 
+<a class="btn btn-primary mb-3" href="<?php echo app()->router->getRoutePath('adminEntityNew', ['entity' => 'post'])?>">Новый пост</a>
+
 <table class="table">
     <thead>
     <tr>

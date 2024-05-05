@@ -1,6 +1,7 @@
 <?php
 /**
  * @var Post $entity
+ * @var ?string $error
  */
 
 use DDaniel\Blog\Entities\Post;
@@ -8,10 +9,18 @@ use DDaniel\Blog\Enums\PostStatus;
 
 ?>
 
-<form action="<?php echo app()->router->getUrlForEntityAdmin($entity)?>" method="post">
-    <input type="hidden" name="method" value="patch">
+<?php if( isset($error) ) : ?>
+<div class="alert alert-danger" role="alert">
+    <?php echo $error ?>
+</div>
+<?php endif; ?>
 
-    <button class="btn btn-primary mb-3" type="submit">Сохранить</button>
+<form action="<?php echo app()->router->getUrlForEntityAdmin($entity) ?>" method="post">
+    <input type="hidden" name="method" value="<?php echo $entity->isNull() ? 'post' : 'patch' ?>">
+
+    <button class="btn btn-primary mb-3" type="submit">
+        <?php echo $entity->isNull() ? 'Создать' : 'Сохранить' ?>
+    </button>
 
     <div class="form-floating mb-3">
         <input type="text"
@@ -33,7 +42,7 @@ use DDaniel\Blog\Enums\PostStatus;
         <label for="slug">Slug</label>
     </div>
 
-    <select class="form-select mb-3">
+    <select class="form-select mb-3" name="status">
         <?php foreach ( PostStatus::cases() as $post_status ) : ?>
             <option value="<?php echo $post_status->value ?>"
                 <?php echo $entity->getStatus() === $post_status ? 'selected' : '' ?>
@@ -64,7 +73,13 @@ use DDaniel\Blog\Enums\PostStatus;
         <label for="excerpt">Excerpt</label>
     </div>
 
-    <button class="btn btn-primary mb-3" type="submit">Сохранить</button>
+    <?php if($entity->isNull()) : ?>
+        <input type="hidden" name="author" value="<?php echo app()->author->getId() ?>">
+    <?php endif; ?>
+
+    <button class="btn btn-primary mb-3" type="submit">
+        <?php echo $entity->isNull() ? 'Создать' : 'Сохранить' ?>
+    </button>
 </form>
 
 
