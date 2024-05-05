@@ -2,7 +2,9 @@
 
 namespace DDaniel\Blog\Entities;
 
+use Ausi\SlugGenerator\SlugGenerator;
 use DateTimeImmutable;
+use DDaniel\Blog\Enums\Entity;
 use DDaniel\Blog\Enums\PostStatus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'posts')]
+#[ORM\HasLifecycleCallbacks]
 class Post
 {
     #[ORM\Id]
@@ -31,9 +34,6 @@ class Post
 
     #[ORM\Column(type: 'string', length: 15, enumType: PostStatus::class)]
     private PostStatus $status;
-
-    #[ORM\Column(name: 'author_id', type: 'integer')]
-    private int $authorId;
 
     #[ORM\Column(name: 'created_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdTime;
@@ -59,8 +59,35 @@ class Post
 
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
-        $this->tags = new ArrayCollection();
+        $this->id          = 0;
+        $this->title       = '';
+        $this->slug        = '';
+        $this->content     = '';
+        $this->excerpt     = '';
+        $this->status      = PostStatus::Draft;
+        $this->categories  = new ArrayCollection();
+        $this->tags        = new ArrayCollection();
+        $this->createdTime = new DateTimeImmutable();
+        $this->updatedTime = new DateTimeImmutable();
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug()
+    {
+        if ($this->getSlug() === '') {
+            $this->setSlug((new SlugGenerator())->generate($this->title));
+        }
+
+        $slugDuplicate = app()->em->getRepository(__CLASS__)->findOneBySlug($this->getSlug());
+
+        if ($slugDuplicate !== null && $slugDuplicate->getId() !== $this->getId()) {
+            throw new \Exception("Пост с таким slug'ом уже существует");
+        }
+    }
+
+    public function isNull(): bool {
+        return $this->getId() === 0;
     }
 
     public function getId(): int
@@ -118,19 +145,13 @@ class Post
         return $this->status;
     }
 
-    public function setStatus(PostStatus $status): void
+    public function setStatus(PostStatus|string $status): void
     {
+        if(is_string($status)) {
+            $status = PostStatus::from($status);
+        }
+
         $this->status = $status;
-    }
-
-    public function getAuthorId(): int
-    {
-        return $this->authorId;
-    }
-
-    public function setAuthorId(int $authorId): void
-    {
-        $this->authorId = $authorId;
     }
 
     public function getCreatedTime(): DateTimeImmutable
