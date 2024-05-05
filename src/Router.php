@@ -14,6 +14,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
+use Doctrine\Laminas\Hydrator\DoctrineObject as DoctrineHydrator;
 
 final class Router
 {
@@ -45,7 +46,7 @@ final class Router
         } catch (MethodNotAllowedException $e) {
             $this->sendError(405, 'Неизвестный url');
         } catch (Exception $e) {
-            error_log('Routing error ' . print_r($e, true));
+            error_log('Routing error ' . $e);
             $this->sendError(500, 'Что-то сломалось');
         }
     }
@@ -75,10 +76,16 @@ final class Router
 
     public function getUrlForEntityAdmin(object $entity): string
     {
-        return $this->getRoutePath('adminEntityEdit', [
-            'entity' => Entity::fromEntityClass($entity::class)->value,
-            'id'     => $entity->getId(),
-        ]);
+        $entityName = Entity::fromEntityClass($entity::class)->value;
+
+        return $entity->isNull() ?
+            $this->getRoutePath('adminEntityNew', [
+                'entity' => $entityName,
+            ]) :
+            $this->getRoutePath('adminEntityEdit', [
+                'entity' => $entityName,
+                'id'     => $entity->getId(),
+            ]);
     }
 
     public function getUrlForEntityFrontend(object $entity): string
@@ -192,7 +199,9 @@ final class Router
 
             app()->templates->include('admin/wrapper', [
                 'title'   => $entity->name . ' new',
-                'content' => app()->templates->include('admin/' . $entity->value . '/new', echo: false),
+                'content' => app()->templates->include('admin/' . $entity->value . '/item', [
+                    'entity' => new ($entity->getEntityClass())()
+                ], false),
             ]);
         }, true);
 
@@ -202,11 +211,37 @@ final class Router
 
             app()->templates->include('admin/wrapper', [
                 'title'   => sprintf('%s #%d edit', $entityType->name, $entity->getId()),
-                'content' => app()->templates->include('admin/' . $entityType->value . '/edit', [
+                'content' => app()->templates->include('admin/' . $entityType->value . '/item', [
                     'entity' => $entity
                 ], false)
             ]);
         }, true);
+
+	    $this->addRoute('adminEntityEdit@post', 'POST', '/admin/{entity}/new', function (array $params) {
+		    $entityType = $this->getEntityType($params);
+
+		    $entity = ( new DoctrineHydrator( app()->em ) )->hydrate( $_POST, new ( $entityType->getEntityClass() )() );
+
+            try {
+                app()->em->persist($entity);
+                app()->em->flush();
+
+                $this->redirectToRoute('adminEntityEdit', [
+                    'entity' => $entityType->value,
+                    'id' => $entity->getId()
+                ]);
+            } catch (Exception $e) {
+                $entity->setId(0);
+
+                app()->templates->include('admin/wrapper', [
+                    'title'   => $entityType->name . ' new (with error)',
+                    'content' => app()->templates->include('admin/' . $entityType->value . '/item', [
+                        'entity' => $entity,
+                        'error'  => $e->getMessage()
+                    ], false),
+                ]);
+            }
+	    }, true);
 
         $this->addRoute('adminEntityEdit@patch', 'PATCH', '/admin/{entity}/{id}', function (array $params) {
             $entityType = $this->getEntityType($params);
