@@ -279,7 +279,7 @@ final class Router
         $this->addRoute('home', 'GET', '/', function () {
             $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
                 'status' => app()->isAuthorized ? [ PostStatus::Published, PostStatus::Draft, PostStatus::Hidden ] : PostStatus::Published
-            ]);
+            ], ['id' => 'DESC']);
 
             app()->templates->include('wrapper', [
                 'title'       => 'Web разработка от Даниила Дубченко',
