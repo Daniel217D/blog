@@ -3,6 +3,9 @@
         <img src="/images/logo_white.svg" alt="Логотип белый" class="logo logo-white">
     </a>
 	<ul class="list-unstyled">
+        <li style="margin-bottom: 5px">
+            <a class="text-white" style="font-size: 1.2rem" href="<?php echo app()->site_url ?>">To site</a>
+        </li>
 	    <?php foreach ( \DDaniel\Blog\Enums\Entity::cases() as $entity ) : ?>
             <li style="margin-bottom: 5px;">
                 <a class="text-white" style="font-size: 1.2rem" href="<?php echo app()->router->getRoutePath('adminEntitiesList', ['entity' => $entity->value])?>">
