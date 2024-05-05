@@ -289,19 +289,19 @@ final class Router
                 ], false)
             ]);
         }, false);
-
-        $this->addRoute('entitiesList', 'GET', 'post', function (array $params) {
-            $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
-                'status' => PostStatus::Published
-            ]);
-
-            app()->templates->include('wrapper', [
-                'title'   => Entity::Post->name . ' list',
-                'content' => app()->templates->include('entities/' . Entity::Post->value . '/list', [
-                    'entities' => $entities
-                ], false)
-            ]);
-        }, false);
+        //
+        //$this->addRoute('entitiesList', 'GET', 'post', function (array $params) {
+        //    $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
+        //        'status' => PostStatus::Published
+        //    ]);
+        //
+        //    app()->templates->include('wrapper', [
+        //        'title'   => Entity::Post->name . ' list',
+        //        'content' => app()->templates->include('entities/' . Entity::Post->value . '/list', [
+        //            'entities' => $entities
+        //        ], false)
+        //    ]);
+        //}, false);
 
         $this->addRoute('entity', 'GET', 'post/{slug}', function (array $params) {
             $entityObject = app()->em->getRepository(Entity::Post->getEntityClass())->findOneBySlug($params['slug']);
