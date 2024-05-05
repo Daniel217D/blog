@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
+use DDaniel\Blog\Entities\Post;
 use DDaniel\Blog\Enums\Entity;
 use DDaniel\Blog\Enums\PostStatus;
 use Exception;
@@ -304,16 +305,23 @@ final class Router
         //}, false);
 
         $this->addRoute('entity', 'GET', 'post/{slug}', function (array $params) {
-            $entityObject = app()->em->getRepository(Entity::Post->getEntityClass())->findOneBySlug($params['slug']);
+            /**
+             * @var Post $post
+             */
+            $post = app()->em->getRepository(Entity::Post->getEntityClass())->findOneBySlug($params['slug']);
 
-            if(null === $entityObject) {
+            if(null === $post) {
+                throw new ResourceNotFoundException();
+            }
+
+            if($post->getStatus() !== PostStatus::Published && !app()->isAuthorized) {
                 throw new ResourceNotFoundException();
             }
 
             app()->templates->include('wrapper', [
-                'title'   => sprintf('%s %s', Entity::Post->name, $entityObject->getTitle()),
+                'title'   => sprintf('%s %s', Entity::Post->name, $post->getTitle()),
                 'content' => app()->templates->include('entities/' . Entity::Post->value . '/item', [
-                    'entity' => $entityObject
+                    'entity' => $post
                 ], false)
             ]);
         }, false);
