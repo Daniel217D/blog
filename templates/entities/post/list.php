@@ -8,7 +8,6 @@ use DDaniel\Blog\Enums\PostStatus;
 
 ?>
 
-<h1>Последние посты: </h1>
 <div class="list-group">
     <?php foreach ($entities as $entity) :
         ?>
