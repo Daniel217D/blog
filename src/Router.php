@@ -22,6 +22,8 @@ final class Router
     private RouteCollection $routes;
     private RequestContext $context;
 
+	private readonly string $currentRoute;
+
     public function __construct()
     {
         $this->routes  = new RouteCollection();
@@ -40,6 +42,8 @@ final class Router
             if ($parameters['mustBeAuthorized'] && ! app()->isAuthorized) {
                 $this->sendError(403, 'Нет доступа');
             }
+
+            $this->currentRoute = explode('@', strtolower($parameters['_route']))[0];
 
             $parameters['function']($parameters);
         } catch (ResourceNotFoundException $e) {
@@ -62,6 +66,21 @@ final class Router
                 methods: is_array($methods) ? $methods : [$methods]
             )
         );
+    }
+
+    public function isCurrentRoute(string|array $route): bool
+    {
+        if (is_string($route)) {
+            return $this->currentRoute === strtolower($route);
+        }
+
+        foreach ($route as $r) {
+            if ($this->isCurrentRoute($r)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function getRoutePath(string $name, array $replacements = []): string
