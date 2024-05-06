@@ -176,9 +176,9 @@ final class Router
     {
         //Login
         $this->addRoute('login', 'GET', '/login', function (array $params) {
-            //if(app()->isAuthorized) {
-            //    $this->redirectToRoute('admin');
-            //}
+            if(app()->isAuthorized) {
+                $this->redirectToRoute('admin');
+            }
 
             app()->templates->include('admin/wrapper', [
                 'title'   => 'Admin panel',
