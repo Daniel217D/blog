@@ -27,7 +27,7 @@ $content = $content ?? '';
 <body data-bs-theme="dark">
 <?php app()->isAuthorized ? app()->templates->include('admin/sidebar') : null; ?>
 
-<div class="container-fluid content">
+<div class="container-fluid content" <?php echo app()->router->isCurrentRoute('login') ? 'style="margin:0"' : '' ?>>
 	<?php echo $content ?>
 </div>
 
