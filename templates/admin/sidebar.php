@@ -13,5 +13,10 @@
                 </a>
             </li>
         <?php endforeach; ?>
+        <li style="margin-bottom: 5px">
+            <form action="<?php echo app()->router->getRoutePath('logout') ?>" method="post">
+                <a href="#" class="text-white" style="font-size: 1.2rem" onclick="event.preventDefault(); this.closest('form').submit()">Logout</a>
+            </form>
+        </li>
 	</ul>
 </div>

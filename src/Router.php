@@ -163,14 +163,24 @@ final class Router
             ]);
         }, false);
 
-        $this->addRoute('login@post', 'POST', '/login', function (array $params) {
-            try {
-                (new Authorization())->authorize($_POST['email'] ?? '', $_POST['password'] ?? '');
-                $this->redirectToRoute('admin');
-            } catch (Exception $e) {
-                $this->redirectToRoute('login'); //ToDo add error message
-            }
-        }, false);
+	    $this->addRoute('login@post', 'POST', '/login', function (array $params) {
+		    try {
+			    (new Authorization())->authorize($_POST['email'] ?? '', $_POST['password'] ?? '');
+			    $this->redirectToRoute('admin');
+		    } catch (Exception $e) {
+			    app()->templates->include('admin/wrapper', [
+				    'title'   => 'Admin panel',
+				    'content' => app()->templates->include('admin/login', [
+					    'error'  => $e->getMessage()
+				    ], false)
+			    ]);
+		    }
+	    }, false);
+
+	    $this->addRoute('logout', 'POST', '/logout', function (array $params) {
+		    (new Authorization())->vanish();
+		    $this->redirectToRoute('login');
+	    }, true);
 
         //Admin
         $this->addRoute('admin', 'GET', '/admin', function (array $params) {

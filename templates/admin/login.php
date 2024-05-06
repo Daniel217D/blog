@@ -1,4 +1,15 @@
+<?php
+/**
+ * @var ?string $error
+ */
+?>
 <main class="form-signin text-center">
+	<?php if( isset($error) ) : ?>
+        <div class="alert alert-danger" role="alert">
+			<?php echo $error ?>
+        </div>
+	<?php endif; ?>
+
     <form method="post" action="<?php echo app()->router->getRoutePath('login@post') ?>">
         <img class="mb-4" src="/images/logo_white.svg" alt="" width="72" height="57">
 
