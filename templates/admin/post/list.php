@@ -34,7 +34,7 @@ use DDaniel\Blog\Entities\Post;
             <td>
                 <span><?php echo $entity->getTitle() ?></span>
                 <br>
-                <a href=" <?php echo app()->router->getUrlForEntityFrontend($entity)?>" class="small"><?php echo $entity->getSlug() ?></a>
+                <a href="<?php echo app()->router->getUrlForEntityFrontend($entity)?>" class="small" target="_blank"><?php echo $entity->getSlug() ?></a>
             </td>
             <td><?php echo $entity->getStatus()->name ?></td>
             <td><?php echo $entity->getAuthor()->getName() ?></td>
