@@ -5,7 +5,10 @@
  */
 
 use DDaniel\Blog\Entities\Post;
+use DDaniel\Blog\Entities\Tag;
 use DDaniel\Blog\Enums\PostStatus;
+
+$tagIds = $entity->getTagIds();
 
 app()->templates->include( 'admin/components/editor-form-start', [ 'entity' => $entity ] ) ?>
 
@@ -58,6 +61,25 @@ app()->templates->include( 'admin/components/editor-form-start', [ 'entity' => $
               placeholder="Excerpt"
               style="min-height: 200px"><?php echo $entity->getExcerpt() ?></textarea>
         <label for="excerpt">Excerpt</label>
+    </div>
+
+    <div class="toggleBtns mb-3">
+        <h6 class="mb-2">Tags</h6>
+
+        <?php foreach (app()->em->getRepository(Tag::class)->findBy([], ['title' => 'ASC']) as $tag ): ?>
+            <input
+                    type="checkbox"
+                    class="btn-check"
+                    name="tagIds[]"
+                    value="<?php echo $tag->getId() ?>"
+                    id="tag-id-<?php echo $tag->getId() ?>"
+                    <?php echo !$entity->isNull() && in_array($tag->getId(), $tagIds) ? 'checked' : '' ?>
+                    autocomplete="off"
+            >
+            <label class="btn mb-2" for="tag-id-<?php echo $tag->getId() ?>">
+                <?php echo $tag->getTitle() ?>
+            </label>
+        <?php endforeach; ?>
     </div>
 
     <?php if($entity->isNull()) : ?>

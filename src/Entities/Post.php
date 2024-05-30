@@ -180,23 +180,51 @@ class Post extends BaseEntity
         $this->author = $author;
     }
 
-    public function getCategories(): ArrayCollection|Collection
+    public function getCategories(): Collection
     {
         return $this->categories;
     }
 
-    public function setCategories(ArrayCollection|Collection $categories): void
+    public function setCategories(Collection $categories): void
     {
         $this->categories = $categories;
     }
 
-    public function getTags(): ArrayCollection|Collection
+    public function getTags(): Collection
     {
         return $this->tags;
     }
 
-    public function setTags(ArrayCollection|Collection $tags): void
+	/**
+	 * @param  Collection<Tag>  $tags
+	 *
+	 * @return void
+	 */
+	public function setTags(Collection $tags): void
+	{
+		$this->tags = $tags;
+	}
+
+    /**
+     * @return array<int>
+     */
+    public function getTagIds(): array
     {
-        $this->tags = $tags;
+        return $this->tags->map(fn($tag) => $tag->getId())->toArray();
+    }
+
+	/**
+	 * @param  array<int>  $tagIds
+	 *
+	 * @return void
+	 */
+    public function setTagIds(array $tagIds): void
+    {
+        $this->tags = new ArrayCollection(
+            array_map(
+                fn($tagId) => app()->em->getReference(Tag::class, $tagId),
+                $tagIds
+            )
+        );
     }
 }
