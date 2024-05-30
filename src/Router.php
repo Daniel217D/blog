@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
+use DDaniel\Blog\Entities\BaseEntity;
 use DDaniel\Blog\Entities\Post;
 use DDaniel\Blog\Enums\Entity;
 use DDaniel\Blog\Enums\PostStatus;
@@ -94,7 +95,7 @@ final class Router
         return app()->site_url . $relativePath;
     }
 
-    public function getUrlForEntityAdmin(object $entity): string
+    public function getUrlForEntityAdmin(BaseEntity $entity): string
     {
         $entityName = Entity::fromEntityClass($entity::class)->value;
 

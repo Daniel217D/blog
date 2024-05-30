@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity]
 #[ORM\Table(name: 'posts')]
 #[ORM\HasLifecycleCallbacks]
-class Post
+class Post extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
@@ -84,10 +84,6 @@ class Post
         if ($slugDuplicate !== null && $slugDuplicate->getId() !== $this->getId()) {
             throw new \Exception("Пост с таким slug'ом уже существует");
         }
-    }
-
-    public function isNull(): bool {
-        return $this->getId() === 0;
     }
 
     public function getId(): int

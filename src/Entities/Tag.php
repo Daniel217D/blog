@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'tags')]
-class Tag
+class Tag extends BaseEntity
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
