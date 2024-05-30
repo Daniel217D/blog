@@ -1,7 +1,7 @@
 import './styles/admin.scss';
 
-import contentFiled from "./js/admin/contentFiled";
+import contentField from "./js/admin/contentField";
 
 document.addEventListener('DOMContentLoaded', () => {
-    contentFiled()
+    contentField()
 })
