@@ -2,12 +2,14 @@
 
 namespace DDaniel\Blog\Entities;
 
+use Ausi\SlugGenerator\SlugGenerator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'tags')]
+#[ORM\HasLifecycleCallbacks]
 class Tag extends BaseEntity
 {
     #[ORM\Id]
@@ -32,7 +34,26 @@ class Tag extends BaseEntity
 
     public function __construct()
     {
+        $this->id = 0;
+        $this->title = '';
+        $this->slug = '';
+        $this->description = '';
         $this->posts = new ArrayCollection();
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function generateSlug()
+    {
+        if ($this->getSlug() === '') {
+            $this->setSlug((new SlugGenerator())->generate($this->title));
+        }
+
+        $slugDuplicate = app()->em->getRepository(__CLASS__)->findOneBySlug($this->getSlug());
+
+        if ($slugDuplicate !== null && $slugDuplicate->getId() !== $this->getId()) {
+            throw new \Exception("Пост с таким slug'ом уже существует");
+        }
     }
 
     public function isNull(): bool {
