@@ -7,7 +7,7 @@ use DDaniel\Blog\Entities\Tag;
 
 ?>
 
-<a class="btn btn-primary mb-3" href="<?php echo app()->router->getRoutePath('adminEntityNew', ['entity' => 'list'])?>">Новый Тег</a>
+<a class="btn btn-primary mb-3" href="<?php echo app()->router->getRoutePath('adminEntityNew', ['entity' => 'tag'])?>">Новый Тег</a>
 
 <table class="table">
     <thead>
