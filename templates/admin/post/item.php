@@ -7,18 +7,7 @@
 use DDaniel\Blog\Entities\Post;
 use DDaniel\Blog\Enums\PostStatus;
 
-?>
-
-<?php if( isset($error) ) : ?>
-<div class="alert alert-danger" role="alert">
-    <?php echo $error ?>
-</div>
-<?php endif; ?>
-
-<form action="<?php echo app()->router->getUrlForEntityAdmin($entity) ?>" method="post">
-    <input type="hidden" name="method" value="<?php echo $entity->isNull() ? 'post' : 'patch' ?>">
-
-	<?php app()->templates->include( 'admin/post/buttons', [ 'entity' => $entity ] ) ?>
+app()->templates->include( 'admin/components/editor-form-start', [ 'entity' => $entity ] ) ?>
 
     <div class="form-floating mb-3">
         <input type="text"
@@ -75,8 +64,7 @@ use DDaniel\Blog\Enums\PostStatus;
         <input type="hidden" name="author" value="<?php echo app()->author->getId() ?>">
     <?php endif; ?>
 
-	<?php app()->templates->include( 'admin/post/buttons', [ 'entity' => $entity ] ) ?>
-</form>
+<?php app()->templates->include( 'admin/components/editor-form-end', [ 'entity' => $entity ] ) ?>
 
 
 

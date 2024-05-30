@@ -1,9 +1,9 @@
 <?php
 /**
- * @var Post $entity
+ * @var BaseEntity $entity
  */
 
-use DDaniel\Blog\Entities\Post;
+use DDaniel\Blog\Entities\BaseEntity;
 ?>
 
 <div class="mb-3">
