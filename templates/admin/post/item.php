@@ -5,20 +5,12 @@
  */
 
 use DDaniel\Blog\Entities\Post;
+use DDaniel\Blog\Entities\Tag;
 use DDaniel\Blog\Enums\PostStatus;
 
-?>
+$tagIds = $entity->getTagIds();
 
-<?php if( isset($error) ) : ?>
-<div class="alert alert-danger" role="alert">
-    <?php echo $error ?>
-</div>
-<?php endif; ?>
-
-<form action="<?php echo app()->router->getUrlForEntityAdmin($entity) ?>" method="post">
-    <input type="hidden" name="method" value="<?php echo $entity->isNull() ? 'post' : 'patch' ?>">
-
-	<?php app()->templates->include( 'admin/post/buttons', [ 'entity' => $entity ] ) ?>
+app()->templates->include( 'admin/components/editor-form-start', [ 'entity' => $entity ] ) ?>
 
     <div class="form-floating mb-3">
         <input type="text"
@@ -71,12 +63,30 @@ use DDaniel\Blog\Enums\PostStatus;
         <label for="excerpt">Excerpt</label>
     </div>
 
+    <div class="toggleBtns mb-3">
+        <h6 class="mb-2">Tags</h6>
+
+        <?php foreach (app()->em->getRepository(Tag::class)->findBy([], ['title' => 'ASC']) as $tag ): ?>
+            <input
+                    type="checkbox"
+                    class="btn-check"
+                    name="tagIds[]"
+                    value="<?php echo $tag->getId() ?>"
+                    id="tag-id-<?php echo $tag->getId() ?>"
+                    <?php echo !$entity->isNull() && in_array($tag->getId(), $tagIds) ? 'checked' : '' ?>
+                    autocomplete="off"
+            >
+            <label class="btn mb-2" for="tag-id-<?php echo $tag->getId() ?>">
+                <?php echo $tag->getTitle() ?>
+            </label>
+        <?php endforeach; ?>
+    </div>
+
     <?php if($entity->isNull()) : ?>
         <input type="hidden" name="author" value="<?php echo app()->author->getId() ?>">
     <?php endif; ?>
 
-	<?php app()->templates->include( 'admin/post/buttons', [ 'entity' => $entity ] ) ?>
-</form>
+<?php app()->templates->include( 'admin/components/editor-form-end', [ 'entity' => $entity ] ) ?>
 
 
 

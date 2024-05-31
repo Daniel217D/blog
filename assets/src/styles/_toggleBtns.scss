@@ -1,0 +1,15 @@
+.toggleBtns {
+  padding: .625rem;
+  border: var(--bs-border-width) solid var(--bs-border-color);
+  border-radius: 5px;
+
+  .btn {
+    @extend .btn-primary;
+
+    background-color: unset;
+  }
+
+  .btn-check:checked + .btn {
+    @extend .btn-primary;
+  }
+}

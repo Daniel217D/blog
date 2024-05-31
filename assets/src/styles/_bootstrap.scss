@@ -1,1 +1,6 @@
 @import "node_modules/bootstrap/scss/bootstrap";
+
+.nav {
+  --bs-nav-link-color: var(--bs-body-color);
+  --bs-nav-link-hover-color: var(--bs-body-color);
+}
