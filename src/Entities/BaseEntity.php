@@ -10,4 +10,8 @@ abstract class BaseEntity {
 	}
 
 	abstract public function getId(): int;
+
+    abstract public function getTitle(): string;
+
+    abstract public function getDescription(): string;
 }

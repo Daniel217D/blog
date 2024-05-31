@@ -16,6 +16,8 @@ use DDaniel\Blog\Entities\Post;
     ]) ?>" target="_blank">(edit)</a>
 <?php endif; ?>
 
+<?php app()->templates->include('components/badges', ['tags' => $entity->getTags()]) ?>
+
 <div class="markdown" style="display: none"><?php echo $entity->getContent() ?></div>
 
 

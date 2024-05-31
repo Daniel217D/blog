@@ -86,6 +86,11 @@ class Post extends BaseEntity
         }
     }
 
+    public function getDescription(): string
+    {
+        return $this->getExcerpt();
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -190,6 +195,9 @@ class Post extends BaseEntity
         $this->categories = $categories;
     }
 
+    /**
+     * @return Collection<Tag>
+     */
     public function getTags(): Collection
     {
         return $this->tags;

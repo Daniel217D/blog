@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
+use DDaniel\Blog\Entities\Author;
 use DDaniel\Blog\Entities\BaseEntity;
 use DDaniel\Blog\Entities\Post;
 use DDaniel\Blog\Enums\Entity;
@@ -156,7 +157,7 @@ final class Router
         return $entity;
     }
 
-    public function getEntity(array $params): object
+    public function getEntity(array $params, string $paramName = 'id'): BaseEntity
     {
         $entity = Entity::tryFrom($params['entity']);
 
@@ -164,7 +165,9 @@ final class Router
             throw new ResourceNotFoundException( "Entity {$params['entity']} not exist" );
         }
 
-        $entityObject = app()->em->find($this->getEntityType($params)->getEntityClass(), $params['id']);
+        $entityObject = app()->em->getRepository(Entity::from($params['entity'])->getEntityClass())->findOneBy(
+            [$paramName => $params[$paramName]]
+        );
 
         if(null === $entityObject) {
             throw new ResourceNotFoundException("Entity {$params['entity']} with id {$params['id']} not exist");
@@ -320,39 +323,43 @@ final class Router
                 ], false)
             ]);
         }, false);
-        //
-        //$this->addRoute('entitiesList', 'GET', 'post', function (array $params) {
-        //    $entities = app()->em->getRepository(Entity::Post->getEntityClass())->findBy([
-        //        'status' => PostStatus::Published
-        //    ]);
-        //
-        //    app()->templates->include('wrapper', [
-        //        'title'   => Entity::Post->name . ' list',
-        //        'content' => app()->templates->include('entities/' . Entity::Post->value . '/list', [
-        //            'entities' => $entities
-        //        ], false)
-        //    ]);
-        //}, false);
 
-        $this->addRoute('entity', 'GET', 'post/{slug}', function (array $params) {
-            /**
-             * @var Post $post
-             */
-            $post = app()->em->getRepository(Entity::Post->getEntityClass())->findOneBySlug($params['slug']);
+        $this->addRoute('entitiesList', 'GET', '{entity}', function (array $params) {
+            $entityType = $this->getEntityType($params);
 
-            if(null === $post) {
+            if($entityType === Entity::Author) {
+                throw new ResourceNotFoundException();
+            } elseif ($entityType === Entity::Post) {
+                $this->redirectToRoute('home');
+            }
+
+            app()->templates->include('wrapper', [
+                'title'       =>  "{$entityType->name} список | Web разработка от Даниила Дубченко",
+                'description' => "{$entityType->name} список | Web разработка от Даниила Дубченко",
+                'content' => app()->templates->include('entities/' . $entityType->value . '/list', [
+                    'entities' => app()->em->getRepository($entityType->getEntityClass())->findAll()
+                ], false)
+            ]);
+        }, false);
+
+        $this->addRoute('entity', 'GET', '{entity}/{slug}', function (array $params) {
+            $entityType = $this->getEntityType($params);
+
+            if($entityType === Entity::Author) {
                 throw new ResourceNotFoundException();
             }
 
-            if($post->getStatus() !== PostStatus::Published && !app()->isAuthorized) {
+            $entity = $this->getEntity($params, 'slug');
+
+            if ($entity instanceof Post && $entity->getStatus() !== PostStatus::Published && ! app()->isAuthorized) {
                 throw new ResourceNotFoundException();
             }
 
             app()->templates->include('wrapper', [
-                'title'   => sprintf('%s %s', Entity::Post->name, $post->getTitle()),
-                'description' => $post->getExcerpt(),
-                'content' => app()->templates->include('entities/' . Entity::Post->value . '/item', [
-                    'entity' => $post
+                'title'   => sprintf('%s %s', $entityType->name, $entity->getTitle()),
+                'description' => $entity->getDescription(),
+                'content' => app()->templates->include('entities/' . $entityType->value . '/item', [
+                    'entity' => $entity
                 ], false)
             ]);
         }, false);

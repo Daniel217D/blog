@@ -1,4 +1,6 @@
 @import "bootstrap";
+
+@import "badges";
 @import "buttons";
 @import "pageHeight100";
 @import "controlButtons";
@@ -12,4 +14,10 @@
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
+}
+
+.list-group-item {
+  & > a {
+    color: var(--bs-body-color);
+  }
 }

@@ -1,0 +1,16 @@
+.badges {
+  margin-bottom: .25rem;
+
+  .badge {
+    text-decoration: unset;
+    background-color: var(--bs-body-color) !important;
+    border: 1px solid rgba(0,0,0,0);
+  }
+
+  body[data-bs-theme="dark"] & {
+    .badge {
+      background-color: unset !important;
+      border: 1px solid $border-color;
+    }
+  }
+}

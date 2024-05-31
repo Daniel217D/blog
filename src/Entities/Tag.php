@@ -90,9 +90,9 @@ class Tag extends BaseEntity
         $this->slug = $slug;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string
     {
-        return $this->description;
+        return $this->description ?: '';
     }
 
     public function setDescription(?string $description): void
