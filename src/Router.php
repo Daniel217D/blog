@@ -328,6 +328,12 @@ final class Router
             ]);
         }, false);
 
+        $this->addRoute('sitemap', 'GET', 'sitemap.xml', function (array $params) {
+            $sitemapGenerator = new SitemapGenerator();
+            $sitemapGenerator->setHeaders();
+            $sitemapGenerator->printXml();
+        }, false);
+
         $this->addRoute('entitiesList', 'GET', '{entity}', function (array $params) {
             $entityType = $this->getEntityType($params);
 
