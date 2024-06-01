@@ -1,5 +1,9 @@
 @import "node_modules/bootstrap/scss/bootstrap";
 
+a {
+  color: rgba(var(--bs-body-color), var(--bs-link-opacity, 1));
+}
+
 .nav {
   --bs-nav-link-color: var(--bs-body-color);
   --bs-nav-link-hover-color: var(--bs-body-color);

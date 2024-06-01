@@ -5,6 +5,7 @@ declare(strict_types=1);
 $title = $title ?? '';
 $description = $description ?? '';
 $type = $type ?? 'website';
+$breadcrumbs = $breadcrumbs ?? '';
 $content = $content ?? '';
 
 ?>
@@ -46,6 +47,8 @@ $content = $content ?? '';
     <div class="container content">
         <div class="row">
             <div class="col">
+                <?php echo $breadcrumbs ?>
+
                 <?php echo $content ?>
             </div>
         </div>

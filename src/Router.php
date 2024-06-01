@@ -342,7 +342,12 @@ final class Router
                 'description' => "{$entityType->name} список | Web разработка от Даниила Дубченко",
                 'content' => app()->templates->include('entities/' . $entityType->value . '/list', [
                     'entities' => app()->em->getRepository($entityType->getEntityClass())->findAll()
-                ], false)
+                ], false),
+                'breadcrumbs' => app()->templates->include('components/breadcrumbs', [
+                    'breadcrumb' => Breadcrumb::generate([
+                        ['title' => $entityType->getPluralValue()],
+                    ])
+                ], false),
             ]);
         }, false);
 
@@ -364,7 +369,18 @@ final class Router
                 'description' => $entity->getDescription(),
                 'content' => app()->templates->include('entities/' . $entityType->value . '/item', [
                     'entity' => $entity
-                ], false)
+                ], false),
+                'breadcrumbs' => app()->templates->include('components/breadcrumbs', [
+                    'breadcrumb' => Breadcrumb::generate([
+                        [
+                            'title' => $entityType->getPluralValue(),
+                            'link' => app()->router->getRoutePath('entitiesList', ['entity' => $entityType->value])
+                        ],
+                        [
+                            'title' => $entity->getTitle()
+                        ],
+                    ])
+                ], false),
             ]);
         }, false);
     }
