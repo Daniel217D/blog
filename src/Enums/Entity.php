@@ -22,6 +22,15 @@ enum Entity: string
         };
     }
 
+    public function getPluralValue(): string
+    {
+        return match ($this) {
+            self::Author => 'authors',
+            self::Post => 'posts',
+            self::Tag => 'tags',
+        };
+    }
+
     public static function fromEntityClass(string $class): self {
         return match ($class) {
             Author::class => self::Author,
