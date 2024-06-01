@@ -50,7 +50,7 @@ class Tag extends BaseEntity
 
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function generateSlug()
+    public function lifecycleGenerateSlug()
     {
         if ($this->getSlug() === '') {
             $this->setSlug((new SlugGenerator())->generate($this->title));
@@ -61,6 +61,13 @@ class Tag extends BaseEntity
         if ($slugDuplicate !== null && $slugDuplicate->getId() !== $this->getId()) {
             throw new \Exception("Пост с таким slug'ом уже существует");
         }
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function lifecycleSetUpdatedTime()
+    {
+        $this->setUpdatedTime(new DateTimeImmutable('now'));
     }
 
     public function isNull(): bool {
