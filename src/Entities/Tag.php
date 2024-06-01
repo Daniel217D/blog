@@ -3,6 +3,7 @@
 namespace DDaniel\Blog\Entities;
 
 use Ausi\SlugGenerator\SlugGenerator;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,6 +26,12 @@ class Tag extends BaseEntity
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description;
+
+    #[ORM\Column(name: 'created_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $createdTime;
+
+    #[ORM\Column(name: 'updated_time', type: 'datetime_immutable', options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $updatedTime;
 
     /**
      * @var Collection<int, Post>
@@ -98,6 +105,26 @@ class Tag extends BaseEntity
     public function setDescription(?string $description): void
     {
         $this->description = $description;
+    }
+
+    public function getCreatedTime(): DateTimeImmutable
+    {
+        return $this->createdTime;
+    }
+
+    public function setCreatedTime(DateTimeImmutable $createdTime): void
+    {
+        $this->createdTime = $createdTime;
+    }
+
+    public function getUpdatedTime(): DateTimeImmutable
+    {
+        return $this->updatedTime;
+    }
+
+    public function setUpdatedTime(DateTimeImmutable $updatedTime): void
+    {
+        $this->updatedTime = $updatedTime;
     }
 
     public function getPosts(): ArrayCollection|Collection
