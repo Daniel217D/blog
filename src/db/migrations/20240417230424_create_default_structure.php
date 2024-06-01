@@ -39,20 +39,6 @@ final class CreateDefaultStructure extends AbstractMigration
                    ->addColumn('updated_time', 'timestamp', ['default' => 'CURRENT_TIMESTAMP', 'null' => false])
                    ->create();
 
-        $tableCategories = $this->table('categories');
-        $tableCategories->addColumn('title', 'string', ['limit' => 127, 'null' => false])
-                        ->addColumn('slug', 'string', ['limit' => 127, 'null' => false])
-                        ->addColumn('description', 'text', ['null' => true])
-                        ->addColumn('parent_category_id', 'integer', ['null' => true])
-                        ->create();
-
-        $tablePostCategory = $this->table('post_category', ['id' => false, 'primary_key' => ['post_id', 'category_id']]);
-        $tablePostCategory->addColumn('post_id', 'integer', ['null' => false])
-                          ->addForeignKey('post_id', 'posts', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
-                          ->addColumn('category_id', 'integer', ['null' => false])
-                          ->addForeignKey('category_id', 'categories', 'id', ['delete' => 'CASCADE', 'update' => 'NO_ACTION'])
-                          ->create();
-
         $tableTags = $this->table('tags');
         $tableTags->addColumn('title', 'string', ['limit' => 127, 'null' => false])
                   ->addColumn('slug', 'string', ['limit' => 127, 'null' => false])

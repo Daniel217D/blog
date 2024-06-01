@@ -46,12 +46,6 @@ class Post extends BaseEntity
     private ?Author $author = null;
 
     /**
-     * @var Collection<int, Category>
-     */
-    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'posts')]
-    private Collection $categories;
-
-    /**
      * @var Collection<int, Tag>
      */
     #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'posts')]
@@ -65,7 +59,6 @@ class Post extends BaseEntity
         $this->content     = '';
         $this->excerpt     = '';
         $this->status      = PostStatus::Draft;
-        $this->categories  = new ArrayCollection();
         $this->tags        = new ArrayCollection();
         $this->createdTime = new DateTimeImmutable();
         $this->updatedTime = new DateTimeImmutable();
@@ -183,16 +176,6 @@ class Post extends BaseEntity
     public function setAuthor(Author $author): void
     {
         $this->author = $author;
-    }
-
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function setCategories(Collection $categories): void
-    {
-        $this->categories = $categories;
     }
 
     /**
