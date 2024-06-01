@@ -49,10 +49,12 @@ final class App
         $this->home_url = $this->site_url;
         $this->current_url = sprintf(
             "%s://%s%s",
-            isset($_SERVER['HTTPS']) ? 'https' : 'http',
+            (!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== 'off') || (!empty($_SERVER["HTTP_X_FORWARDED_SSL"]) && $_SERVER["HTTP_X_FORWARDED_SSL"] !== 'off') || (!empty($_SERVER["HTTP_X_FORWARDED_PROTO"]) && $_SERVER["HTTP_X_FORWARDED_PROTO"] === 'https')
+                ? 'https' : 'http',
             $_SERVER['HTTP_HOST'] ?? '',
-            rtrim($_SERVER['REQUEST_URI']??'', '/') ?? ''
+            rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH), '/') ?? ''
         );
+
         $this->is_home_page = $this->current_url === $this->site_url;
         $this->search_string = isset( $_GET['s'] ) && is_string( $_GET['s'] ) ? $_GET['s'] : '';
     }
