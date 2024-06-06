@@ -320,8 +320,8 @@ final class Router
             ], ['id' => 'DESC']);
 
             app()->templates->include('wrapper', [
-                'title'       => 'Web разработка от Даниила Дубченко',
-                'description' => 'Web разработка от Даниила Дубченко',
+                'title'       => app()->site_name,
+                'description' => app()->site_name,
                 'content' => app()->templates->include('entities/' . Entity::Post->value . '/list', [
                     'entities' => $entities
                 ], false)
@@ -344,8 +344,8 @@ final class Router
             }
 
             app()->templates->include('wrapper', [
-                'title'       =>  "{$entityType->name} список | Web разработка от Даниила Дубченко",
-                'description' => "{$entityType->name} список | Web разработка от Даниила Дубченко",
+                'title'       => "{$entityType->name} список | " . app()->site_name,
+                'description' => "{$entityType->name} список | " . app()->site_name,
                 'content' => app()->templates->include('entities/' . $entityType->value . '/list', [
                     'entities' => app()->em->getRepository($entityType->getEntityClass())->findAll()
                 ], false),
@@ -371,7 +371,7 @@ final class Router
             }
 
             app()->templates->include('wrapper', [
-                'title'   => sprintf('%s %s', $entityType->name, $entity->getTitle()),
+                'title'   => sprintf('%s | %s', $entity->getTitle(), app()->site_name),
                 'description' => $entity->getDescription(),
                 'content' => app()->templates->include('entities/' . $entityType->value . '/item', [
                     'entity' => $entity
