@@ -21,7 +21,7 @@ class Setting
     private string $value;
 
     #[ORM\Column(type: 'string', length: 255, enumType: SettingType::class)]
-    private string $type;
+    private SettingType $type;
 
     public function getId(): int
     {
@@ -53,12 +53,12 @@ class Setting
         $this->value = $value;
     }
 
-    public function getType(): string
+    public function getType(): SettingType
     {
         return $this->type;
     }
 
-    public function setType(string $type): void
+    public function setType(SettingType $type): void
     {
         $this->type = $type;
     }
