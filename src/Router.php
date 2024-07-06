@@ -8,6 +8,7 @@ use DDaniel\Blog\Admin\Authorization;
 use DDaniel\Blog\Entities\Author;
 use DDaniel\Blog\Entities\BaseEntity;
 use DDaniel\Blog\Entities\Post;
+use DDaniel\Blog\Entities\Setting;
 use DDaniel\Blog\Enums\Entity;
 use DDaniel\Blog\Enums\PostStatus;
 use Exception;
@@ -214,6 +215,15 @@ final class Router
             app()->templates->include('admin/wrapper', [
                 'title'   => 'Admin panel',
                 'content' => app()->templates->include('admin/dashboard', echo: false)
+            ]);
+        }, true);
+
+        $this->addRoute('settings', 'GET', '/admin/settings', function () {
+            app()->templates->include('admin/wrapper', [
+                'title'   => 'settings',
+                'content' => app()->templates->include('admin/settings/page', [
+                    'settings' => app()->em->getRepository(Setting::class)->findAll()
+                ], false)
             ]);
         }, true);
 
