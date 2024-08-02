@@ -228,11 +228,7 @@ final class Router
         }, true);
 
         $this->addRoute('settings@put', 'PUT', '/admin/settings', function () {
-            if ( ! isset($_POST['settingData'])) {
-                $this->redirectToRoute('settings');
-            }
-
-            $settingsNew = $_POST['settingData'];
+            $settingsNew = $_POST['setting'];
 
             /**
              * @var <int, Setting> $settingsCurrent
