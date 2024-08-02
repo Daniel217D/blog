@@ -6,6 +6,7 @@ namespace DDaniel\Blog;
 
 use DDaniel\Blog\Admin\Authorization;
 use DDaniel\Blog\Entities\Author;
+use DDaniel\Blog\Entities\Setting;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -95,5 +96,16 @@ final class App
     public function start(): void
     {
         $this->router->processRequest();
+    }
+
+    /**
+     * @param  string  $key
+     *
+     * @return mixed|null null if setting not found
+     */
+    public function getSetting(string $key): mixed {
+        return $this->em->getRepository(Setting::class)->findOneBy(
+            ['key' => $key]
+        )?->getValue();
     }
 }

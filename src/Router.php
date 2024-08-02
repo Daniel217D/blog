@@ -227,6 +227,50 @@ final class Router
             ]);
         }, true);
 
+        $this->addRoute('settings@put', 'PUT', '/admin/settings', function () {
+            if ( ! isset($_POST['settingData'])) {
+                $this->redirectToRoute('settings');
+            }
+
+            $settingsNew = $_POST['settingData'];
+
+            /**
+             * @var <int, Setting> $settingsCurrent
+             */
+            $settingsCurrent = app()->em
+                ->createQueryBuilder()
+                ->select('s')
+                ->from(Setting::class, 's', 's.id')
+                ->getQuery()
+                ->getResult();
+
+
+            $hydrator = new DoctrineHydrator( app()->em );
+
+            foreach ($settingsNew as $id => $settingData) {
+                if (isset($settingsCurrent[$id])) {
+                    $settingsCurrent[$id]->setKey($settingData['key']);
+                    $settingsCurrent[$id]->setValue($settingData['value']);
+                } else {
+                    $setting = $hydrator->hydrate($settingData, new Setting());
+
+                    if( $setting->getKey() !== '' && $setting->getValue() !== '' ) {
+                        app()->em->persist($setting);
+                    }
+                }
+            }
+
+            foreach ($settingsCurrent as $setting) {
+                if ( ! isset($settingsNew[$setting->getId()])) {
+                    app()->em->remove($setting);
+                }
+            }
+
+            app()->em->flush();
+
+            $this->redirectToRoute('settings' );
+        }, true);
+
         $this->addRoute('adminEntitiesList', 'GET', '/admin/{entity}', function (array $params) {
             $entity = Entity::tryFrom($params['entity']);
 

@@ -23,6 +23,14 @@ class Setting
     #[ORM\Column(type: 'string', length: 255, enumType: SettingType::class)]
     private SettingType $type;
 
+    public function __construct()
+    {
+        $this->setId(0);
+        $this->setKey('');
+        $this->setValue('');
+        $this->setType(SettingType::TEXT);
+    }
+
     public function getId(): int
     {
         return $this->id;
@@ -58,8 +66,8 @@ class Setting
         return $this->type;
     }
 
-    public function setType(SettingType $type): void
+    public function setType(SettingType|string $type): void
     {
-        $this->type = $type;
+        $this->type = is_string($type) ? SettingType::from( $type ) : $type;
     }
 }

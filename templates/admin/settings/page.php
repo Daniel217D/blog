@@ -8,7 +8,7 @@ use DDaniel\Blog\Enums\SettingType;
 
 ?>
 
-<form action="">
+<form action="<?php echo app()->router->getRoutePath('settings@put') ?>" method="post">
     <input type="hidden" name="method" value="PUT">
 
     <button class="btn btn-primary" type="submit">Сохранить</button>

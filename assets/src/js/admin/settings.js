@@ -18,13 +18,16 @@ export default () => {
         e.preventDefault();
 
         const id = `new_${Date.now()}`
+        const inputFieldType = selectSettingType.value;
 
         tableSettings.appendChild(template('setting', {
             id,
-            field: template(`setting-${selectSettingType.value}`, {
+            field: template(`setting-${inputFieldType}`, {
                 id
             })
         }));
+
+        tableSettings.appendChild(fromHTML(`<input type="hidden" name="setting[${id}][type]" value="${inputFieldType}">`))
     } )
 }
 
